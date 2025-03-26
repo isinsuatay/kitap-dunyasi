@@ -1,6 +1,5 @@
-// store/modules/user.js
 import bcrypt from "bcryptjs";
-import { addUser, getUsers } from "@/utils/localstorage";
+import { addUser, getUsers } from "@/utils/localStorage";
 
 export default {
   state: {

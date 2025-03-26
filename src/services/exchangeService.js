@@ -1,4 +1,3 @@
-// src/services/exchangeService.js
 import axios from "axios";
 
 const BASE_CURRENCY = "USD";
