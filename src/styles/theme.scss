@@ -1,0 +1,56 @@
+@use 'variables' as *;
+
+// Tema geçişleri için yumuşak animasyonlar
+body, .navbar, .header, .footer, .theme-btn {
+  transition: background-color $transition-speed ease-in-out, color $transition-speed ease-in-out;
+}
+
+// Açık/Karanlık mod değişkenleri
+:root {
+  --primary-bg-color: #{$background-light}; 
+  --primary-text-color: #{$text-color-light}; 
+  --header-bg-color: #{$primary-color};
+  --card-bg-color: #{$white}; 
+  --card-text-color: #{$text-color-light};
+}
+
+body.dark-mode {
+  --primary-bg-color: #{$gray-dark}; 
+  --primary-text-color: #{$text-color-dark}; 
+  --header-bg-color: #{$header-dark};
+  --card-bg-color: #{$gray-dark}; 
+  --card-text-color: #{$text-color-dark}; 
+}
+
+// Buton stilleri
+.theme-btn {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  border: none;
+  padding: 8px 12px;
+  border-radius: $border-radius;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all $transition-speed ease-in-out;
+  outline: none;
+
+  &:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+  }
+}
+
+body.dark-mode .theme-btn {
+  background: linear-gradient(135deg, #355c7d, #6c5b7b);
+}
+
+// Arka planlar ve renkler
+body {
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
+}
+
+.card {
+  background-color: var(--card-bg-color);
+  color: var(--card-text-color);
+  transition: background-color $transition-speed, color $transition-speed;
+}

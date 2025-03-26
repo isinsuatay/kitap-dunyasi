@@ -1,0 +1,143 @@
+@use "@/styles/variables" as vars; 
+
+.book-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  .sidebar {
+    flex: 1;
+    max-width: 300px;
+    background-color: vars.$background-light;
+    padding: 20px;
+    border-radius: vars.$border-radius;
+    box-shadow: 0 4px 8px vars.$shadow-light;
+
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: vars.$primary;
+    }
+
+    .filters {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      .filter-item {
+        display: flex;
+        flex-direction: column;
+
+        label {
+          font-size: 1rem;
+          color: vars.$text-color-dark;
+        }
+
+        select,
+        input {
+          margin-top: 5px;
+          padding: 8px;
+          font-size: 1rem;
+          border-radius: vars.$border-radius;
+          border: 1px solid vars.$gray;
+          transition: all vars.$transition-speed ease;
+        }
+
+        select:focus,
+        input:focus {
+          border-color: vars.$primary;
+        }
+
+        input[type="number"] {
+          width: 100px;
+        }
+
+        input[type="checkbox"] {
+          margin-right: 10px;
+        }
+      }
+
+      .clear-filters {
+        background-color: vars.$secondary-color;
+        color: vars.$white;
+        padding: 10px;
+        border: none;
+        border-radius: vars.$border-radius;
+        cursor: pointer;
+        transition: background-color vars.$transition-speed ease;
+
+        &:hover {
+          background-color: vars.$primary-hover;
+        }
+      }
+    }
+  }
+
+  .book-list-content {
+    flex: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .book-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      transition: transform vars.$transition-speed ease;
+
+      &.list {
+        grid-template-columns: 1fr;
+      }
+
+    
+    }
+
+    .no-books {
+      font-size: 1.5rem;
+      color: vars.$text-color-light;
+      text-align: center;
+      padding: 50px;
+      border-radius: vars.$border-radius;
+      background-color: vars.$background-light;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .sidebar {
+      max-width: 250px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .book-list-container {
+      flex-direction: column;
+    }
+
+    .sidebar {
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .book-list-content {
+      display: block;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .book-list-container {
+      gap: 10px;
+    }
+
+    .sidebar {
+      padding: 15px;
+    }
+
+    .clear-filters {
+      font-size: 0.9rem;
+    }
+
+    .book-list {
+      grid-template-columns: 1fr;
+    }
+  }
+}

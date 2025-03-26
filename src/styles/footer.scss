@@ -1,0 +1,171 @@
+.footer {
+  background: linear-gradient(to right, #2575fc, #6a11cb);
+  color: white;
+  padding: 2.5em 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  // Footer container
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+    padding: 1em;
+    gap: 20px;
+    transition: all 0.3s ease;
+
+    .footer-logo {
+      flex: 1;
+      max-width: 250px;
+      text-align: left;
+      transition: transform 0.3s ease;
+
+      a {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-decoration: none;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        transition: color 0.3s ease-in-out;
+
+        &:hover {
+          color: #f1c40f;
+          transform: scale(1.05);
+        }
+      }
+
+      p {
+        font-size: 0.9rem;
+        margin-top: 8px;
+      }
+    }
+
+    .footer-links,
+    .footer-contact,
+    .footer-social {
+      flex: 1;
+      min-width: 180px;
+      text-align: left;
+      transition: transform 0.3s ease;
+
+      h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        border-bottom: 2px solid white;
+        display: inline-block;
+        padding-bottom: 5px;
+        transition: color 0.3s ease;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+
+        li {
+          margin: 8px 0;
+
+          a {
+            text-decoration: none;
+            color: white;
+            font-size: 1rem;
+            transition: color 0.3s ease-in-out;
+
+            &:hover {
+              color: #f1c40f;
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+
+      p {
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+
+        i {
+          font-size: 1.1rem;
+        }
+      }
+    }
+
+    .footer-social {
+      text-align: center;
+
+      .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 10px;
+
+        a {
+          color: white;
+          font-size: 1.5rem;
+          transition: color 0.3s ease-in-out;
+
+          &:hover {
+            color: #f1c40f;
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+  }
+
+  // Footer bottom section
+  .footer-bottom {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    text-align: center;
+  }
+
+  // Mobile responsiveness
+  @media (max-width: 768px) {
+    .footer-container {
+      flex-direction: column;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .footer-logo {
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .footer-links,
+    .footer-contact,
+    .footer-social {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .footer-logo a {
+      justify-content: center;
+    }
+
+    .footer-social .social-links {
+      gap: 10px;
+    }
+
+    .footer-bottom {
+      font-size: 0.8rem;
+    }
+  }
+
+  // Tablet and smaller screens responsiveness
+  @media (max-width: 1024px) {
+    .footer-container {
+      flex-direction: column;
+      text-align: center;
+      gap: 15px;
+    }
+  }
+}

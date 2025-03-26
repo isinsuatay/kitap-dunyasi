@@ -1,0 +1,115 @@
+@use "@/styles/variables.scss" as *;
+@use "sass:color";
+
+.book-card {
+  position: relative;
+  width: 220px;
+  background: $white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px $shadow-light;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+  text-align: center;
+  padding: 12px;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px $shadow-dark;
+  }
+
+  .favorite-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 8px 12px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    background: none;
+
+    .fa-star {
+      color: $gray-dark;
+    }
+
+    .fa-star.active {
+      color: $gold;
+    }
+
+    &:hover {
+      background: color.adjust($primary-color, $lightness: -10%);
+      transform: scale(1.2);
+    }
+  }
+}
+
+.book-image-container {
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  .book-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; 
+    transition: transform 0.3s;
+  }
+
+  .book-card:hover .book-cover {
+    transform: scale(1.05);
+  }
+}
+
+.book-info {
+  padding: 10px;
+
+  .book-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: $gray-dark;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .book-author,
+  .book-category {
+    font-size: 0.85rem;
+    margin: 5px 0;
+  }
+}
+
+.price-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-weight: bold;
+
+  .book-price {
+    color: $primary;
+    font-size: 0.95rem;
+  }
+
+  .rating {
+    color: $gold;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .book-card {
+    width: 100%;
+    max-width: 250px;
+    margin: auto;
+  }
+
+  .book-image-container {
+    height: 250px;
+  }
+}

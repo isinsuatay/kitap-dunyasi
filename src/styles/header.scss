@@ -1,0 +1,204 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1em 2em;
+  margin: 2em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  top: 0;
+  z-index: 9999;
+  border-radius: 20px;
+  background: white;
+  position: relative;
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+
+    a {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 3px;
+        background: teal;
+        bottom: -5px;
+        left: -100%;
+        transition: left 0.4s ease-in-out;
+      }
+
+      &:hover::before {
+        left: 0;
+      }
+    }
+
+    i {
+      animation: bounce 1.5s infinite alternate ease-in-out;
+    }
+  }
+
+  @keyframes bounce {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-5px);
+    }
+  }
+
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5em;
+
+    li {
+      position: relative;
+    }
+
+    a {
+      text-decoration: none;
+      color: black;
+      font-size: 1.1em;
+      font-weight: 500;
+      text-transform: capitalize;
+      padding: 8px 16px;
+      border-radius: 5px;
+      transition: all 0.3s ease-in-out;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: darkslategrey;
+        transform: scaleX(0);
+        transition: transform 0.3s ease-in-out;
+      }
+
+      &:hover::after {
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  .search-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .theme-toggle {
+    width: 50px;
+    height: 25px;
+    background: transparent;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.3s ease-in-out;
+
+    .toggle-slider {
+      width: 22px;
+      height: 22px;
+      position: absolute;
+      left: 2px;
+      transition: transform 0.3s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.dark {
+        transform: translateX(25px);
+      }
+    }
+
+    .sun-icon {
+      color: #f39c12;
+      font-size: 14px;
+      position: absolute;
+      left: 5px;
+      transition: opacity 0.3s ease-in-out;
+      opacity: 1;
+    }
+
+    .moon-icon {
+      color: #f1c40f;
+      font-size: 14px;
+      position: absolute;
+      right: 5px;
+      transition: opacity 0.3s ease-in-out;
+      opacity: 0.4;
+    }
+
+    .toggle-slider.dark {
+      .sun-icon {
+        opacity: 0.4;
+      }
+
+      .moon-icon {
+        opacity: 1;
+      }
+    }
+  }
+
+  // Hamburger Menü (Mobil)
+  .menu-icon {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 1.5em;
+
+    .menu-icon {
+      display: block;
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      gap: 1em;
+      width: 100%;
+      text-align: center;
+      background: rgba(255, 255, 255, 1);
+      position: absolute;
+      top: 100%;
+      left: 0;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease-in-out;
+
+      &.active {
+        display: flex;
+      }
+
+      li {
+        width: 100%;
+      }
+
+      a {
+        width: 100%;
+        padding: 10px;
+        font-size: 1.2em;
+      }
+    }
+  }
+}
