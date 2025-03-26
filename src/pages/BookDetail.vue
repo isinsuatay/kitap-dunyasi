@@ -65,7 +65,7 @@ import { computed, ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import Swal from "sweetalert2";
-import ReviewsSection from "@/Components/ReviewsSection.vue";
+import ReviewsSection from "@/components/ReviewsSection.vue";
 import BookCard from "@/components/BookCard.vue";
 
 const route = useRoute();
