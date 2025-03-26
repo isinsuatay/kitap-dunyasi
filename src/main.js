@@ -12,5 +12,5 @@ app.use(store).use(router).mount("#app");
 
 // Döviz kurları her 30 dakikada bir güncellenecek
 setInterval(() => {
-  store.dispatch("currency/fetchExchangeRates");  // exchange yerine currency modülü kullanılıyor
+  store.dispatch("currency/fetchExchangeRates"); 
 }, 30 * 60 * 1000); // 30 dakika
