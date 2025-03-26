@@ -19,7 +19,7 @@ function mergeUnique(existingData, newData, key) {
   const mergedMap = new Map(existingData.map(item => [item[key], item]));
 
   newData.forEach(item => {
-    if (!mergedMap.has(item[key])) {
+    if (item[key] !== undefined) {
       mergedMap.set(item[key], item);
     }
   });
@@ -59,9 +59,11 @@ export async function initializeLocalStorage() {
       } else if (typeof DEFAULT_VALUES[key] === "string" && DEFAULT_VALUES[key].endsWith(".json")) {
         // Eğer JSON dosyası içeren bir anahtarsa, mevcut veriyi birleştir
         const newData = await fetchJSON(DEFAULT_VALUES[key]);
-        const parsedStoredData = JSON.parse(storedData);
+        const parsedData = storedData ? JSON.parse(storedData) : [];
 
-        const mergedData = mergeUnique(parsedStoredData, newData, "id");
+        // Burada değişken adını düzgün şekilde düzeltmelisiniz
+        const mergedData = mergeUnique(parsedData, newData, "id");
+
         localStorage.setItem(key, JSON.stringify(mergedData));
       }
     }
@@ -202,10 +204,9 @@ export function addReview(bookId, userId, review) {
 // **Filtreleme İşlevleri** (Kategori, Dilz ve Sıralama)
 export function getFiltersFromLocalStorage() {
   try {
-    const filters = localStorage.getItem(FILTERS_KEY);
-    return filters ? JSON.parse(filters) : { category: "", language: "", sortOption: "name" };
+    return JSON.parse(filters) || { category: "", language: "", sortOption: "name" };
   } catch (error) {
-    console.error("LocalStorage'dan filtreler okunurken hata oluştu:", error);
+    console.error("Filtreler yüklenirken JSON hatası:", error);
     return { category: "", language: "", sortOption: "name" };
   }
 }
@@ -255,28 +256,3 @@ export function getFilteredBooksFromLocalStorage(filters) {
   }
 }
 
-// Döviz kuru verilerini almak için örnek fonksiyon
-async function fetchExchangeRates() {
-  try {
-    const response = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
-    const data = await response.json();
-    return data.rates; // Döviz kurlarını döndürüyoruz
-  } catch (error) {
-    console.error("Döviz kuru verisi alınırken hata oluştu:", error);
-    return null;
-  }
-}
-
-// Fiyatı seçilen para birimine dönüştüren fonksiyon
-export function convertPrice(price, fromCurrency, toCurrency, rates) {
-  if (!rates || !rates[fromCurrency] || !rates[toCurrency]) {
-    console.error("Geçersiz döviz kuru verisi.");
-    return price;
-  }
-  
-  // USD'den hedef para birimine dönüşüm
-  const priceInUSD = price / rates[fromCurrency];
-  const convertedPrice = priceInUSD * rates[toCurrency];
-  
-  return convertedPrice;
-}

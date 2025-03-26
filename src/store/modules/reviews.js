@@ -35,12 +35,10 @@ export default {
       // Yorumu kaldır
       state.reviews[bookId] = state.reviews[bookId].filter((review) => review.id !== reviewId);
     
-      // Eğer kitap için hiç yorum kalmadıysa, state'ten tamamen kaldır
       if (state.reviews[bookId].length === 0) {
         delete state.reviews[bookId];
       }
     
-      // REAKTİVİTEYİ KORUMAK İÇİN YENİ STATE OLUŞTUR
       state.reviews = { ...state.reviews };
     
       // LocalStorage güncelle

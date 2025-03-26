@@ -45,7 +45,6 @@
 
         label {
           font-size: 1rem;
-          color: vars.$text-color-dark;
         }
         
         select,
@@ -54,16 +53,43 @@
           padding: 8px;
           font-size: 1rem;
           border-radius: vars.$border-radius;
-          border: 1px solid vars.$gray;
           transition: all vars.$transition-speed ease;
+          border: 1px solid rgb(240, 237, 237) ;    
           
           &:focus {
-            border-color: vars.$primary;
-            box-shadow: 0 0 5px vars.$primary;
+            border-color: vars.$primary;      
+            box-shadow: 0 0 5px vars.$primary;  
           }
         }
       }
       
+      .view-toggle {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+        
+        button {
+          background-color: transparent;
+          border: none;
+          font-size: 1.5rem;
+          cursor: pointer;
+          transition: transform 0.2s ease, color 0.2s ease;
+          padding: 10px;
+          border-radius: 50%;
+          
+          color: orange;  
+
+          &:hover {
+            transform: scale(1.1);
+          }
+      
+          &.active {
+            transform: scale(1.2);
+            color:brown
+          }
+        }
+      }
       .clear-filters {
         background-color: vars.$secondary-color;
         color: vars.$white;

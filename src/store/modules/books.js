@@ -1,4 +1,3 @@
-// store/modules/books.js
 import {
   getBooksFromLocalStorage,
   saveBooksToLocalStorage,

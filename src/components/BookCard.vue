@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
@@ -47,8 +47,25 @@ const exchangeRates = computed(() => store.state.currency.exchangeRates);
 
 // Fiyat bilgisi
 const originalPrice = computed(() => props.book.price || 0);
+const bookCurrency = computed(() => props.book.currency || "USD");
 
+// Döviz çevirme
+const convertedPrice = computed(() => {
+  if (!exchangeRates.value || !exchangeRates.value[selectedCurrency.value]) {
+    return originalPrice.value.toFixed(2); // Döviz kurları yoksa orijinal fiyatı göster
+  }
 
+  if (bookCurrency.value === selectedCurrency.value) {
+    return originalPrice.value.toFixed(2); // Zaten aynı para birimindeyse çeviri yapma
+  }
+
+  const baseRate = exchangeRates.value[bookCurrency.value];
+  const targetRate = exchangeRates.value[selectedCurrency.value];
+
+  if (!baseRate || !targetRate) return originalPrice.value.toFixed(2);
+
+  return ((originalPrice.value / baseRate) * targetRate).toFixed(2);
+});
 
 // Detay sayfasına git
 const goToDetail = () => {
@@ -66,6 +83,11 @@ const toggleFavorite = () => {
 
 // Döviz kurlarını yükle
 onMounted(() => {
+  store.dispatch("currency/fetchExchangeRates");  
+});
+
+// Para birimi değiştiğinde döviz kurlarını güncelle
+watch(selectedCurrency, () => {
   store.dispatch("currency/fetchExchangeRates");
 });
 </script>

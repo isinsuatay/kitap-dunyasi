@@ -11,9 +11,13 @@
         
         <div class="filter-item">
           <div class="view-toggle">
-        <button @click="changeViewMode('grid')" :class="{ active: viewMode === 'grid' }">📚 Grid</button>
-        <button @click="changeViewMode('list')" :class="{ active: viewMode === 'list' }">📖 List</button>
-      </div>
+  <button @click="changeViewMode('grid')" :class="{ active: viewMode === 'grid' }">
+    <i class="fas fa-th-large"></i>
+  </button>
+  <button @click="changeViewMode('list')" :class="{ active: viewMode === 'list' }">
+    <i class="fas fa-list"></i>
+  </button>
+</div>
         </div>
         <div class="filter-item">
           <label for="category">Kategori:</label>
@@ -34,22 +38,33 @@
             </option>
           </select>
         </div>
+<div class="filter-item">
+  <label for="minPages">Min. Sayfa Sayısı:</label>
+  <input 
+    type="number" 
+    v-model="minPages" 
+    @input="applyFilters" 
+    @change="minPages = Math.max(minPages, 0)" 
+  />
 
-        <div class="filter-item">
-          <label for="minPrice">Min. Fiyat:</label>
-          <input type="number" v-model="minPrice" @input="applyFilters" />
+  <label for="maxPages">Max. Sayfa Sayısı:</label>
+  <input 
+    type="number" 
+    v-model="maxPages" 
+    @input="applyFilters" 
+    @change="maxPages = Math.max(maxPages, 0)" 
+  />
+</div>
 
-          <label for="maxPrice">Max. Fiyat:</label>
-          <input type="number" v-model="maxPrice" @input="applyFilters" />
-        </div>
-
-        <div class="filter-item">
-          <label for="minPages">Min. Sayfa Sayısı:</label>
-          <input type="number" v-model="minPages" @input="applyFilters" />
-
-          <label for="maxPages">Max. Sayfa Sayısı:</label>
-          <input type="number" v-model="maxPages" @input="applyFilters" />
-        </div>
+         <!-- Para Birimi Seçici -->
+    <div class="filter-item">
+      <label for="currency">Para Birimi:</label>
+      <select v-model="selectedCurrency" @change="updateCurrency">
+        <option v-for="(rate, currency) in exchangeRates" :key="currency" :value="currency">
+          {{ currency }}
+        </option>
+      </select>
+    </div>
 
         <div class="filter-item">
           <label for="isFree">
@@ -91,9 +106,11 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';import { useStore } from 'vuex';
+import { computed, ref, onMounted } from 'vue'; 
+import { useStore } from 'vuex';
 import BookCard from './BookCard.vue';
 import SearchBar from './SearchBar.vue';
+import { getStoredExchangeRates, fetchExchangeRates } from "@/services/exchangeService"
 
 const store = useStore();
 
@@ -109,26 +126,51 @@ const viewMode = ref(localStorage.getItem("viewMode") || "grid");
 // Filtreler için state'ler
 const selectedCategory = ref("");
 const selectedLanguage = ref("");
-const minPrice = ref(null);
-const maxPrice = ref(null);
 const minPages = ref(null);
 const maxPages = ref(null);
 const isFree = ref(false);
 const selectedSort = ref("newest");
-
-
-
 const categories = computed(() => store.state.books.categories);
 const languages = computed(() => store.state.books.languages);
 
+// Kitapları ve döviz kurlarını Vuex'ten al
+const exchangeRates = computed(() => store.state.currency.exchangeRates || {});
+
+// Para birimi seçimi ve güncelleme
+const selectedCurrency = computed({
+  get: () => store.state.currency.selectedCurrency,
+  set: (value) => store.dispatch("currency/setSelectedCurrency", value),
+});
+
+// Döviz verilerini API'den çekme ve Vuex'e kaydetme
+const fetchAndUpdateExchangeRates = async () => {
+  const rates = await fetchExchangeRates();
+  if (rates) {
+    store.commit("currency/setExchangeRates", rates);  // Vuex'te döviz kuru verisini güncelle
+  }
+};
+
+// Sayfa yüklendiğinde döviz verilerini kontrol etme
+onMounted(() => {
+  const storedRates = getStoredExchangeRates();
+
+  if (storedRates) {
+    store.commit("currency/setExchangeRates", storedRates);  // Döviz kurlarını Vuex'e kaydet
+  } else {
+    fetchAndUpdateExchangeRates();  // Eğer localStorage'da veri yoksa, API'den al
+  }
+});
+
+// Para birimi seçildiğinde işlem yapma
+const updateCurrency = () => {
+  store.dispatch("currency/setSelectedCurrency", selectedCurrency.value);
+};
 
 // Filtreleri uygulama
 const applyFilters = () => {
   store.dispatch("books/filterBooks", {
     category: selectedCategory.value,
     language: selectedLanguage.value,
-    minPrice: minPrice.value,
-    maxPrice: maxPrice.value,
     minPages: minPages.value,
     maxPages: maxPages.value,
     isFree: isFree.value,
@@ -140,8 +182,6 @@ const applyFilters = () => {
 const clearFilters = () => {
   selectedCategory.value = "";
   selectedLanguage.value = "";
-  minPrice.value = null;
-  maxPrice.value = null;
   minPages.value = null;
   maxPages.value = null;
   isFree.value = false;
@@ -154,6 +194,7 @@ const changeViewMode = (mode) => {
   viewMode.value = mode;
   localStorage.setItem("viewMode", mode);
 };
+
 // Sıralama işlemi
 const sortedBooks = computed(() => {
   let books = [...filteredBooks.value];
@@ -173,7 +214,6 @@ const sortedBooks = computed(() => {
       return books;
   }
 });
-
 </script>
 
 <style lang="scss">
