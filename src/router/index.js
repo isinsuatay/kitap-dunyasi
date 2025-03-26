@@ -1,11 +1,10 @@
-// src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '@/pages/HomePage.vue';
 import BookDetail from '@/pages/BookDetail.vue';
 import FavoritesPage from '@/pages/FavoritesPage.vue';
 import ProfilePage from '@/pages/ProfilePage.vue';
 import AuthPage from '@/pages/AuthPage.vue';
-import store from '@/store'; // Vuex Store
+import store from '@/store';
 import AddBook from '@/pages/AddBook.vue';
 
 const routes = [

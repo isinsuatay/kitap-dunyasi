@@ -90,7 +90,6 @@ onMounted(() => {
   }
 });
 
-// Featured kitaplar değiştiğinde, hata mesajını temizle
 watch(featuredBooks, (newBooks) => {
   if (newBooks.length > 0) {
     errorMessage.value = ""; 
@@ -104,11 +103,4 @@ onUnmounted(() => {
 
 <style lang="scss">
 @use "@/styles/carousel";
-
-.error-message {
-  color: red;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 20px;
-}
 </style>

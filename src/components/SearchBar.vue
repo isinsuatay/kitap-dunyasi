@@ -16,7 +16,7 @@
         :key="book.id" 
         @click="goToBookDetail(book.id)"
       >
-        {{ book.name }}
+        {{ book.title }}
       </li>
     </ul>
   </div>
@@ -90,70 +90,7 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
-.search-bar {
-  position: relative;
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  align-items: center;
-  background: #fff;
-  border-radius: 25px;
-  border: 1px solid #ddd;
-  transition: all 0.3s ease;
-}
+<style lang="scss">
 
-.search-icon {
-  padding: 10px;
-  color: #888;
-  font-size: 18px;
-  transition: transform 0.3s ease;
-}
-
-.search-icon:hover {
-  transform: scale(1.2);
-}
-
-.search-input {
-  width: 100%;
-  padding: 8px 16px 8px 0;
-  font-size: 16px;
-  border: none;
-  outline: none;
-  border-radius: 25px;
-  padding-left: 32px;
-  transition: all 0.3s ease;
-}
-
-.search-input:focus {
-  border: 1px solid #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-.search-results {
-  position: absolute;
-  top: 100%; /* Bu kısım, listeyi input'un hemen altına yerleştirir */
-  left: 0;
-  background: white;
-  border: 1px solid #ddd;
-  width: 100%;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  z-index: 10;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-height: 300px; /* Maksimum yükseklik */
-  overflow-y: auto; /* Eğer liste çok uzunsa kaydırılabilir yap */
-}
-
-.search-results li {
-  padding: 8px;
-  cursor: pointer;
-  transition: background 0.2s ease-in-out;
-}
-
-.search-results li:hover {
-  background: #007bff;
-  color: white;
-}
+@use "@/styles/searchBar";
 </style>

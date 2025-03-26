@@ -34,8 +34,6 @@ const props = defineProps({
 const store = useStore();
 const router = useRouter();
 
-// Varsayılan resim
-const defaultImage = "/images/default-book.png"; // Eğer proje içinde yoksa public klasörüne ekleyebilirsin
 
 // Kitap resmini belirleme
 const bookImage = computed(() => props.book.image || props.book.cover || defaultImage);
@@ -66,7 +64,11 @@ const goToDetail = () => {
 
 // Favori ekleme/çıkartma
 const toggleFavorite = () => {
-  store.dispatch(isFavorite.value ? "favorites/removeFavorite" : "favorites/addFavorite", props.book.id);
+  if (isFavorite.value) {
+    store.dispatch("favorites/removeFavorite", props.book.id);
+  } else {
+    store.dispatch("favorites/addFavorite", props.book); 
+  }
 };
 
 // Döviz kurlarını yükle

@@ -1,4 +1,3 @@
-<!-- AddBook.vue -->
 <template>
   <div class="add-book">
     <div class="wizard">
@@ -57,7 +56,7 @@
       <!-- 4. ADIM: Kitap Özeti -->
       <div v-if="step === 4">
         <h2>Özet</h2>
-        <textarea v-model="book.summary"></textarea>
+        <quill-editor v-model="book.summary" theme="snow" />
       </div>
 
       <!-- BUTONLAR -->
@@ -73,8 +72,13 @@
 <script>
 import Swal from 'sweetalert2'; 
 import { getBooksFromLocalStorage, addBookToLocalStorage } from "@/utils/localStorage";
+import { QuillEditor } from '@vueup/vue-quill';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 export default {
+  components: {
+    QuillEditor
+  },
   data() {
     return {
       step: 1,
@@ -169,22 +173,19 @@ export default {
 
   const reader = new FileReader();
   reader.onload = () => {
-    this.book.image = reader.result; // Base64 formatında kaydet
+    this.book.image = reader.result; 
   };
   reader.readAsDataURL(file);
 },
-    saveBook() {
-  if (!this.book.image) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Hata',
-      text: 'Lütfen bir kitap görseli yükleyin.',
-    });
-    return;
+saveBook() {
+  if (!this.book.id) {
+    this.book.id = Date.now().toString(); 
   }
+  // Kullanıcı ID'sini ekle
+  this.book.addedBy = this.$store.state.user.id;
 
-  addBookToLocalStorage(this.book);
-  
+  addBookToLocalStorage(this.book); 
+
   Swal.fire({
     icon: 'success',
     title: 'Başarılı',
@@ -218,8 +219,4 @@ export default {
 <style scoped>
 @import "@/styles/addBook.scss";
 
-.info-text {
-  font-size: 0.9rem;
-  color: #6c757d;
-}
 </style>

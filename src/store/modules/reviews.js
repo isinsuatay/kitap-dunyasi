@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import { toRaw } from 'vue'; // Proxy nesnesini düz nesneye çevirmek için gerekli
 
 export default {
   namespaced: true,
@@ -7,15 +6,12 @@ export default {
     reviews: JSON.parse(localStorage.getItem("reviews")) || {},
   },
   mutations: {
-    ADD_REVIEW(state, payload) {
-      const rawPayload = toRaw(payload); // Proxy nesnesini düz nesneye çevir
-      const { bookId, userId, username, text, rating } = rawPayload;
-  
+    ADD_REVIEW(state, { bookId, userId, username, text, rating }) {
       if (!userId || !username) {
-        console.error("Kullanıcı bilgileri eksik! Yorum eklenemedi.", rawPayload);
+        console.error("Kullanıcı bilgileri eksik! Yorum eklenemedi.");
         return;
       }
-  
+
       const review = {
         id: uuidv4(),
         userId,
@@ -24,31 +20,30 @@ export default {
         rating,
         createdAt: new Date().toISOString(),
       };
-  
+
       if (!state.reviews[bookId]) {
         state.reviews[bookId] = [];
       }
-  
-      state.reviews[bookId] = [...state.reviews[bookId], review];
-  
-      // Reaktiviteyi korumak için state'i yeniden atıyoruz
-      state.reviews = { ...state.reviews };
 
+      state.reviews[bookId].push(review);
       localStorage.setItem("reviews", JSON.stringify(state.reviews));
     },
 
-    DELETE_REVIEW(state, { bookId, reviewId }) {
+    DELETE_REVIEW(state, { bookId, reviewId, userId }) {
       if (!state.reviews[bookId]) return;
-
-      state.reviews[bookId] = state.reviews[bookId].filter(r => r.id !== reviewId);
-
+    
+      // Yorumu kaldır
+      state.reviews[bookId] = state.reviews[bookId].filter((review) => review.id !== reviewId);
+    
+      // Eğer kitap için hiç yorum kalmadıysa, state'ten tamamen kaldır
       if (state.reviews[bookId].length === 0) {
         delete state.reviews[bookId];
       }
-
-      // Reaktiviteyi korumak için state'i yeniden atıyoruz
+    
+      // REAKTİVİTEYİ KORUMAK İÇİN YENİ STATE OLUŞTUR
       state.reviews = { ...state.reviews };
-
+    
+      // LocalStorage güncelle
       localStorage.setItem("reviews", JSON.stringify(state.reviews));
     },
 
@@ -65,38 +60,30 @@ export default {
         updatedAt: new Date().toISOString(),
       };
 
-      // Reaktiviteyi korumak için state'i yeniden atıyoruz
-      state.reviews = { ...state.reviews };
-
       localStorage.setItem("reviews", JSON.stringify(state.reviews));
     }
   },
   getters: {
+    // Kullanıcıya ait yorumları döndürür
+    getReviewsByUser: (state) => (userId) => {
+      const reviews = [];
+      for (const bookId in state.reviews) {
+        if (state.reviews[bookId]) {
+          reviews.push(...state.reviews[bookId].filter(review => review.userId === userId));
+        }
+      }
+      return reviews;
+    },
+    // Bu getter, bookId'ye göre yorumları döndürür
     getReviewsByBook: (state) => (bookId) => state.reviews[bookId] || [],
-
-    userComments: (state) => (userId) => {
-      if (!userId) return [];
-
-      const userReviews = [];
-      Object.entries(state.reviews).forEach(([bookId, reviews]) => {
-        reviews.forEach(review => {
-          if (review.userId === userId) {
-            userReviews.push({ ...review, bookId });
-          }
-        });
-      });
-      return userReviews;
-    }
   },
   actions: {
     addReview({ commit }, payload) {
       commit("ADD_REVIEW", payload);
     },
-    
     deleteReview({ commit }, payload) {
       commit("DELETE_REVIEW", payload);
     },
-
     updateReview({ commit }, payload) {
       commit("UPDATE_REVIEW", payload);
     }

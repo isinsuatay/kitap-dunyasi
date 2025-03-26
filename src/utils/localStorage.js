@@ -1,3 +1,4 @@
+// utils/localstorage.js
 const BOOKS_KEY = "books";
 const CATEGORIES_KEY = "categories";
 const USERS_KEY = "users";
@@ -8,12 +9,24 @@ const FILTERS_KEY = "filters";
 const DEFAULT_VALUES = {
   [BOOKS_KEY]: "/books.json",
   [CATEGORIES_KEY]: "/categories.json",
-  [USERS_KEY]: [],
+  [USERS_KEY]: JSON.stringify([]),
   [FAVORITES_KEY]: {},
   [ REVIEWS_KEY]: {},
   [FILTERS_KEY]: { category: "", language: "", sortOption: "name" },
 };
 
+// **Verileri birleştirme fonksiyonu**
+function mergeUnique(existingData, newData, key) {
+  const mergedMap = new Map(existingData.map(item => [item[key], item]));
+
+  newData.forEach(item => {
+    if (!mergedMap.has(item[key])) {
+      mergedMap.set(item[key], item);
+    }
+  });
+
+  return Array.from(mergedMap.values());
+}
 // Asenkron veri çekme fonksiyonu
 async function fetchJSON(file) {
   try {
@@ -28,22 +41,35 @@ async function fetchJSON(file) {
   }
 }
 
-//  LocalStorage başlatma
+// **LocalStorage başlatma fonksiyonu**
 export async function initializeLocalStorage() {
   try {
     for (const key in DEFAULT_VALUES) {
-      if (!localStorage.getItem(key)) {
-        const value = typeof DEFAULT_VALUES[key] === "string" 
-          ? await fetchJSON(DEFAULT_VALUES[key]) 
-          : DEFAULT_VALUES[key];
-        localStorage.setItem(key, JSON.stringify(value));
+      const storedData = localStorage.getItem(key);
+
+      // Eğer localStorage'da veri yoksa, varsayılan değeri kullan
+      if (!storedData) {
+        if (typeof DEFAULT_VALUES[key] === "string" && DEFAULT_VALUES[key].endsWith(".json")) {
+          // Sadece .json uzantılı dosyaları fetch et
+          const value = await fetchJSON(DEFAULT_VALUES[key]);
+          localStorage.setItem(key, JSON.stringify(value));
+        } else {
+          // JSON dosyası değilse direkt kaydet
+          localStorage.setItem(key, JSON.stringify(DEFAULT_VALUES[key]));
+        }
+      } else if (typeof DEFAULT_VALUES[key] === "string" && DEFAULT_VALUES[key].endsWith(".json")) {
+        // Eğer JSON dosyası içeren bir anahtarsa, mevcut veriyi birleştir
+        const newData = await fetchJSON(DEFAULT_VALUES[key]);
+        const parsedStoredData = JSON.parse(storedData);
+
+        const mergedData = mergeUnique(parsedStoredData, newData, "id");
+        localStorage.setItem(key, JSON.stringify(mergedData));
       }
     }
   } catch (error) {
     console.error("LocalStorage başlatılırken hata oluştu:", error);
   }
 }
-
 //  Kitap Yönetimi
 export function getBooksFromLocalStorage() {
   try {
@@ -255,3 +281,4 @@ export function convertPrice(price, fromCurrency, toCurrency, rates) {
   
   return convertedPrice;
 }
+

@@ -1,29 +1,44 @@
-@use "@/styles/variables" as vars; 
+@use "@/styles/variables" as vars;
 
 .book-list-container {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-
+  align-items: flex-start;
+  
   .sidebar {
     flex: 1;
     max-width: 300px;
-    background-color: vars.$background-light;
+    background-color:#f0f0f0;
     padding: 20px;
     border-radius: vars.$border-radius;
     box-shadow: 0 4px 8px vars.$shadow-light;
+    transition: transform 0.3s ease-in-out;
 
+    &:hover {
+      transform: translateY(-5px);
+    }
+    
     h3 {
       font-size: 1.5rem;
       margin-bottom: 15px;
       color: vars.$primary;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      
+      &::before {
+        content: "\f0b0";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+      }
     }
-
+    
     .filters {
       display: flex;
       flex-direction: column;
       gap: 15px;
-
+      
       .filter-item {
         display: flex;
         flex-direction: column;
@@ -32,7 +47,7 @@
           font-size: 1rem;
           color: vars.$text-color-dark;
         }
-
+        
         select,
         input {
           margin-top: 5px;
@@ -41,22 +56,14 @@
           border-radius: vars.$border-radius;
           border: 1px solid vars.$gray;
           transition: all vars.$transition-speed ease;
-        }
-
-        select:focus,
-        input:focus {
-          border-color: vars.$primary;
-        }
-
-        input[type="number"] {
-          width: 100px;
-        }
-
-        input[type="checkbox"] {
-          margin-right: 10px;
+          
+          &:focus {
+            border-color: vars.$primary;
+            box-shadow: 0 0 5px vars.$primary;
+          }
         }
       }
-
+      
       .clear-filters {
         background-color: vars.$secondary-color;
         color: vars.$white;
@@ -64,10 +71,19 @@
         border: none;
         border-radius: vars.$border-radius;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
         transition: background-color vars.$transition-speed ease;
-
+        
         &:hover {
           background-color: vars.$primary-hover;
+        }
+        
+        &::before {
+          content: "\f12d";
+          font-family: "Font Awesome 5 Free";
+          font-weight: 900;
         }
       }
     }
@@ -75,23 +91,20 @@
 
   .book-list-content {
     flex: 3;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-
+    width: 100%;
+    
     .book-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(4, minmax(200px, 1fr)); 
       gap: 20px;
       transition: transform vars.$transition-speed ease;
-
+      
       &.list {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
       }
-
-    
     }
-
+    
     .no-books {
       font-size: 1.5rem;
       color: vars.$text-color-light;
@@ -103,41 +116,28 @@
   }
 
   @media (max-width: 1024px) {
-    .sidebar {
-      max-width: 250px;
+    .book-list {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
-
+  
   @media (max-width: 768px) {
-    .book-list-container {
-      flex-direction: column;
-    }
-
+    flex-direction: column;
+    align-items: center;
+    
     .sidebar {
       max-width: 100%;
-      margin-bottom: 20px;
+      width: 100%;
     }
-
-    .book-list-content {
-      display: block;
+    
+    .book-list {
+      grid-template-columns: repeat(2, 1fr);
     }
   }
-
+  
   @media (max-width: 480px) {
-    .book-list-container {
-      gap: 10px;
-    }
-
-    .sidebar {
-      padding: 15px;
-    }
-
-    .clear-filters {
-      font-size: 0.9rem;
-    }
-
     .book-list {
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr !important;
     }
   }
 }

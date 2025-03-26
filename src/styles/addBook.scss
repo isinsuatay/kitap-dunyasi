@@ -2,91 +2,140 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  background-color: #f4f7fa;
+  padding: 20px;
   font-family: 'Arial', sans-serif;
+}
 
-  .wizard {
-    width: 400px;
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.5s ease-in-out;
-  }
+.wizard {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  transition: all 0.3s ease-in-out;
 
   h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
     text-align: center;
-    font-size: 22px;
-    color: #444;
+    font-weight: bold;
   }
 
   input, select, textarea {
     width: 100%;
     padding: 10px;
-    margin: 10px 0;
+    margin-bottom: 15px;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-    &:focus {
-      border-color: #ff758c;
-      box-shadow: 0 0 10px rgba(255, 117, 140, 0.5);
-    }
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #fafafa;
+    transition: border-color 0.3s ease;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: #2e8b57; 
+    outline: none;
+  }
+
+  .info-text {
+    font-size: 0.85rem;
+    color: #777;
+    margin-top: 5px;
+  }
+
+  select {
+    padding: 12px;
+    background-color: #fafafa;
+    border: 1px solid #ddd;
+  }
+
+  textarea {
+    min-height: 150px;
+    resize: vertical;
   }
 
   .buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    gap: 10px;
+  }
 
-    button {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
+  button {
+    padding: 12px 20px;
+    border: none;
+    background-color: #2e8b57;
+    color: white;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #248f45;
     }
 
-    button:hover {
-      transform: scale(1.05);
-    }
-
-    button:disabled {
-      background: #ddd;
+    &:disabled {
+      background-color: #ddd;
       cursor: not-allowed;
-    }
-
-    button:nth-child(1) {
-      background: #ccc;
-      color: #444;
-    }
-
-    button:nth-child(2) {
-      background: #ff758c;
-      color: #fff;
-    }
-
-    button:nth-child(2):not(:disabled):hover {
-      background: #ff4f6d;
     }
   }
 
-  img {
-    display: block;
-    max-width: 100%;
-    border-radius: 10px;
-    margin-top: 10px;
-    animation: fadeIn 0.5s ease-in-out;
+  .buttons button:first-child {
+    background-color: #f4b400;
+  }
+
+  .buttons button:first-child:hover {
+    background-color: #e19b00;
+  }
+
+  .buttons button:last-child {
+    background-color: #2e8b57;
+  }
+
+  .buttons button:last-child:hover {
+    background-color: #248f45;
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
+// Responsive Tasarım
+@media (max-width: 768px) {
+  .wizard {
+    padding: 20px;
+    width: 100%;
+    max-width: 100%;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .wizard {
+    padding: 15px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  input, select, textarea {
+    font-size: 0.95rem;
+  }
+
+  .buttons button {
+    padding: 10px;
+    font-size: 0.9rem;
   }
 }

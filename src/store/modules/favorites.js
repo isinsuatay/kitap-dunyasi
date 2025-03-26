@@ -11,7 +11,7 @@ export default {
       if (!Array.isArray(state.favorites)) {
         state.favorites = [];
       }
-      if (!state.favorites.find((fav) => fav.id === book.id)) {
+      if (!state.favorites.find((fav) => String(fav.id) === String(book.id))) {
         state.favorites.push(book);
         localStorage.setItem("favorites", JSON.stringify(state.favorites));
       }
@@ -20,7 +20,7 @@ export default {
       if (!Array.isArray(state.favorites)) {
         state.favorites = [];
       }
-      state.favorites = state.favorites.filter((book) => book.id !== bookId);
+      state.favorites = state.favorites.filter((book) => String(book.id) !== String(bookId));
       localStorage.setItem("favorites", JSON.stringify(state.favorites));
     },
     SET_FAVORITES(state, books) {
@@ -41,7 +41,8 @@ export default {
     },
   },
   getters: {
-    favorites: (state) => Array.isArray(state.favorites) ? state.favorites : [],
-    isFavorite: (state) => (bookId) => Array.isArray(state.favorites) && state.favorites.some((book) => book.id === bookId),
+    favorites: (state) => (Array.isArray(state.favorites) ? state.favorites : []),
+    isFavorite: (state) => (bookId) => 
+      Array.isArray(state.favorites) && state.favorites.some((book) => String(book.id) === String(bookId)),
   },
 };
