@@ -280,4 +280,3 @@ export function convertPrice(price, fromCurrency, toCurrency, rates) {
   
   return convertedPrice;
 }
-

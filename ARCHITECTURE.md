@@ -7,11 +7,11 @@ Kitap Dünyası Pro, Vue 3 ile geliştirilen bir kitap yönetim ve inceleme plat
 src/
   assets/
   components/
-  directives/
   layouts/
   pages/
   store/
   router/
+  styles/
   utils/
   App.vue
   main.js
@@ -19,13 +19,12 @@ src/
 
 ### Ana Klasörler
 - **components/**: Tekrar kullanılabilir Vue bileşenleri.
-- **directives/**: Özel Vue yönergeleri (custom directives).
 - **layouts/**: Sayfa düzenlerini içerir.
 - **pages/**: Route bazlı sayfalar.
 - **store/**: Vuex ile state yönetimi.
 - **router/**: Uygulama yönlendirmelerini içerir.
+- **styles/** : Global ve bileşen bazlı stil dosyaları
 - **utils/**: Yardımcı fonksiyonlar.
-- **assets/**: Statik dosyalar (görseller, ikonlar, vs.).
 
 ## Mimari Kararlar
 ### 1. **Vuex ile Durum Yönetimi**

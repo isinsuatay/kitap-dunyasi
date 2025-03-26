@@ -23,19 +23,19 @@ const routes = [
     path: '/addbook',
     name: 'AddBook',
     component: AddBook,
-    meta: { requiresAuth: true }, // Bu sayfada giriş yapılması gerekir
+    meta: { requiresAuth: true }, 
   },
   {
     path: '/favorites',
     name: 'Favorites',
     component: FavoritesPage,
-    meta: { requiresAuth: true }, // Bu sayfada giriş yapılması gerekir
+    meta: { requiresAuth: true }, 
   },
   {
     path: '/profile',
     name: 'Profile',
     component: ProfilePage,
-    meta: { requiresAuth: true }, // Giriş yapmayan kullanıcılar erişemez
+    meta: { requiresAuth: true },
   },
   {
     path: '/auth',
@@ -43,9 +43,9 @@ const routes = [
     component: AuthPage,
     beforeEnter: (to, from, next) => {
       if (store.getters.isAuthenticated) {
-        next('/profile'); // Eğer giriş yapıldıysa profile yönlendir
+        next('/profile'); 
       } else {
-        next(); // Giriş yapılmadıysa devam et
+        next(); 
       }
     },
   },
@@ -54,6 +54,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    // Eğer önceki konum kaydedilmişse, oraya dön
+    if (savedPosition) {
+      return savedPosition;
+    }
+    // Sayfa geçişlerinde her zaman en üstte başla
+    return { top: 0, left: 0, behavior: 'smooth' };
+  },
 });
 
 // Sayfalara giriş kontrolü ekleme
@@ -66,4 +74,3 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router;
-

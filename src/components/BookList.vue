@@ -86,8 +86,6 @@
       <div v-else class="no-books">
         📖 No books found.
       </div>
-
-  
     </div>
   </div>
 </template>

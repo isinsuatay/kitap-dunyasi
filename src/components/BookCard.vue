@@ -33,7 +33,7 @@ const props = defineProps({
 
 const store = useStore();
 const router = useRouter();
-
+const defaultImage = "/default-book.jpg"; 
 
 // Kitap resmini belirleme
 const bookImage = computed(() => props.book.image || props.book.cover || defaultImage);
@@ -48,14 +48,7 @@ const exchangeRates = computed(() => store.state.currency.exchangeRates);
 // Fiyat bilgisi
 const originalPrice = computed(() => props.book.price || 0);
 
-// Doğru döviz çevirme fonksiyonu
-const convertedPrice = computed(() => {
-  if (!originalPrice.value || !exchangeRates.value[selectedCurrency.value]) {
-    return originalPrice.value;
-  }
-  const fromCurrency = props.book.currency || "TRY"; // Eğer kayıtta para birimi yoksa TRY varsayalım
-  return ((originalPrice.value / exchangeRates.value[fromCurrency]) * exchangeRates.value[selectedCurrency.value]).toFixed(2);
-});
+
 
 // Detay sayfasına git
 const goToDetail = () => {

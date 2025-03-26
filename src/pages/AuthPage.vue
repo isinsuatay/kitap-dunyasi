@@ -1,4 +1,3 @@
-<!-- AuthPage.vue -->
 <template>
   <div class="auth-container">
     <div class="auth-box">
