@@ -124,9 +124,9 @@ export function deleteBookFromLocalStorage(bookId) {
 
 //  Kullanıcı Yönetimi
 export function getUsers() {
-  return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+  const users = localStorage.getItem(USERS_KEY);
+  return users ? JSON.parse(users) : []; 
 }
-
 export function saveUsers(users) {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
