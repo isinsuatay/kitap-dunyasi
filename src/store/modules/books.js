@@ -26,10 +26,10 @@ const state = {
 const mutations = {
   setBooks(state, books) {
     state.books = books;
-    state.filteredBooks = books;
+    state.filteredBooks = [...books]; 
     state.featuredBooks = books.filter(book => book.featured);
-    state.languages = [...new Set(books.map((book) => book.language))];
-    state.categories = [...new Set(books.map((book) => book.category))];
+    state.languages = [...new Set(books.map(book => book.language).filter(Boolean))];
+    state.categories = [...new Set(books.map(book => book.category).filter(Boolean))];
     saveBooksToLocalStorage(books);
   },
   addBook(state, book) {
@@ -99,10 +99,28 @@ const actions = {
     try {
       commit("setLoading", true);
       await initializeLocalStorage();
+  
+      // Kitapları LocalStorage'dan al
       const books = getBooksFromLocalStorage();
+      
+      if (!Array.isArray(books)) {
+        console.error("LocalStorage'daki kitap verisi geçersiz:", books);
+        commit("setBooks", []); // Geçersiz veri varsa boş dizi ata
+      } else {
+        commit("setBooks", books);
+      }
+  
+      // Kategorileri LocalStorage'dan al
       const categories = getCategoriesFromLocalStorage();
-      commit("setBooks", books);
-      commit("setCategories", categories); // ✅ Hata burada
+      console.log("Kategoriler:", categories);
+  
+      if (!Array.isArray(categories)) {
+        console.error("Kategori verisi geçersiz:", categories);
+        commit("setCategories", []); // Kategoriler geçersizse boş dizi ata
+      } else {
+        commit("setCategories", categories);
+      }
+      
     } catch (error) {
       console.error("Kitapları yüklerken hata oluştu:", error);
     } finally {
@@ -125,24 +143,33 @@ const actions = {
       commit("setLoading", false);
     }
   },
-  filterBooks({ state, commit }, { category, language, minPrice, maxPrice, isFree, minPages, maxPages }) {
+  filterBooks({ state, commit }, filters) {
+    console.log("Vuex filterBooks çalıştı, gelen filtreler:", filters);
     let filtered = [...state.books];
-
-    if (isFree) {
-        filtered = filtered.filter((book) => book.price === 0);
+  
+    if (!filters.category && !filters.language && filters.minPages === null && filters.maxPages === null && !filters.isFree) {
+      filtered = state.books; // Filtreleme yoksa tüm kitapları göster
     } else {
-        if (minPrice !== null) filtered = filtered.filter((book) => book.price >= minPrice);
-        if (maxPrice !== null) filtered = filtered.filter((book) => book.price <= maxPrice);
+      if (filters.isFree) filtered = filtered.filter((book) => book.price === 0);
+      if (filters.minPages !== null) filtered = filtered.filter((book) => book.pageCount >= filters.minPages);
+      if (filters.maxPages !== null) filtered = filtered.filter((book) => book.pageCount <= filters.maxPages);
+      
+      if (filters.category) {
+        console.log("Kategoriye göre filtreleme yapılıyor:", filters.category);
+        filtered = filtered.filter((book) => book.category?.toLowerCase() === filters.category.toLowerCase());
+      }
+  
+      if (filters.language) {
+        console.log("Dile göre filtreleme yapılıyor:", filters.language);
+        filtered = filtered.filter((book) => book.language?.toLowerCase() === filters.language.toLowerCase());
+      }
     }
-
-    if (category) filtered = filtered.filter((book) => book.category === category);
-    if (language) filtered = filtered.filter((book) => book.language === language);
-    if (minPages !== null) filtered = filtered.filter((book) => book.pageCount >= minPages);
-    if (maxPages !== null) filtered = filtered.filter((book) => book.pageCount <= maxPages);
-
+  
+    console.log("Filtreleme sonrası kitaplar:", filtered);
+  
     filtered = sortBooks(filtered, state.sortOption);
     commit("setFilteredBooks", filtered);
-},
+  },
   searchBooks({ state, commit }, searchQuery) {
     const filtered = state.books.filter((book) =>
       book.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -186,16 +213,7 @@ const actions = {
   const freeBooks = books.filter((book) => book.price === 0);
   commit("setFreeBooks", freeBooks);
 },
-async loadMoreBooks({ commit, state }, { page }) {
-  try {
-    const response = await fetch(`https://api.example.com/books?page=${page}`); // API endpointini güncelle
-    const newBooks = await response.json();
-    commit("ADD_MORE_BOOKS", newBooks);
-  } catch (error) {
-    console.error("Kitaplar yüklenirken hata oluştu:", error);
-  }
-},
-  
+
 };
 
 const getters = {

@@ -168,6 +168,15 @@ const updateCurrency = () => {
 
 // Filtreleri uygulama
 const applyFilters = () => {
+  console.log("Filtreleme uygulanıyor:", {
+    category: selectedCategory.value,
+    language: selectedLanguage.value,
+    minPages: minPages.value,
+    maxPages: maxPages.value,
+    isFree: isFree.value,
+    sort: selectedSort.value,
+  });
+
   store.dispatch("books/filterBooks", {
     category: selectedCategory.value,
     language: selectedLanguage.value,

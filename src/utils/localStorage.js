@@ -9,23 +9,10 @@ const DEFAULT_VALUES = {
   [BOOKS_KEY]: "/books.json",
   [CATEGORIES_KEY]: "/categories.json",
   [USERS_KEY]: JSON.stringify([]),
-  [FAVORITES_KEY]: {},
-  [ REVIEWS_KEY]: {},
+  [FAVORITES_KEY]: {}, 
+  [REVIEWS_KEY]: {}, 
   [FILTERS_KEY]: { category: "", language: "", sortOption: "name" },
 };
-
-// **Verileri birleştirme fonksiyonu**
-function mergeUnique(existingData, newData, key) {
-  const mergedMap = new Map(existingData.map(item => [item[key], item]));
-
-  newData.forEach(item => {
-    if (item[key] !== undefined) {
-      mergedMap.set(item[key], item);
-    }
-  });
-
-  return Array.from(mergedMap.values());
-}
 // Asenkron veri çekme fonksiyonu
 async function fetchJSON(file) {
   try {
@@ -40,48 +27,61 @@ async function fetchJSON(file) {
   }
 }
 
-// **LocalStorage başlatma fonksiyonu**
+
+//  LocalStorage başlatma
 export async function initializeLocalStorage() {
   try {
     for (const key in DEFAULT_VALUES) {
-      const storedData = localStorage.getItem(key);
-
-      // Eğer localStorage'da veri yoksa, varsayılan değeri kullan
-      if (!storedData) {
-        if (typeof DEFAULT_VALUES[key] === "string" && DEFAULT_VALUES[key].endsWith(".json")) {
-          // Sadece .json uzantılı dosyaları fetch et
-          const value = await fetchJSON(DEFAULT_VALUES[key]);
-          localStorage.setItem(key, JSON.stringify(value));
-        } else {
-          // JSON dosyası değilse direkt kaydet
-          localStorage.setItem(key, JSON.stringify(DEFAULT_VALUES[key]));
-        }
-      } else if (typeof DEFAULT_VALUES[key] === "string" && DEFAULT_VALUES[key].endsWith(".json")) {
-        // Eğer JSON dosyası içeren bir anahtarsa, mevcut veriyi birleştir
-        const newData = await fetchJSON(DEFAULT_VALUES[key]);
-        const parsedData = storedData ? JSON.parse(storedData) : [];
-
-        // Burada değişken adını düzgün şekilde düzeltmelisiniz
-        const mergedData = mergeUnique(parsedData, newData, "id");
-
-        localStorage.setItem(key, JSON.stringify(mergedData));
+      if (!localStorage.getItem(key)) {
+        const value = typeof DEFAULT_VALUES[key] === "string"
+        ? await fetchJSON(DEFAULT_VALUES[key]) || [] 
+        : DEFAULT_VALUES[key];
+      
+      localStorage.setItem(key, JSON.stringify(value));
       }
+    }
+    // Eğer filtreler kaydedilmemişse, onları da kaydet
+    if (!localStorage.getItem(FILTERS_KEY)) {
+      saveFiltersToLocalStorage(DEFAULT_VALUES[FILTERS_KEY]);
     }
   } catch (error) {
     console.error("LocalStorage başlatılırken hata oluştu:", error);
   }
 }
+
 //  Kitap Yönetimi
+// export function getBooksFromLocalStorage() {
+//   try {
+//     const books = localStorage.getItem(BOOKS_KEY);
+//     return books ? JSON.parse(books) : [];
+//   } catch (error) {
+//     console.error("LocalStorage okunurken hata oluştu:", error);
+//     return [];
+//   }
+// }
+
 export function getBooksFromLocalStorage() {
   try {
     const books = localStorage.getItem(BOOKS_KEY);
-    return books ? JSON.parse(books) : [];
+
+    if (!books) {
+      console.warn("LocalStorage'da kitap verisi bulunamadı.");
+      return [];
+    }
+
+    const parsedBooks = JSON.parse(books);
+
+    if (!Array.isArray(parsedBooks)) {
+      console.error("LocalStorage'daki kitap verisi geçersiz:", parsedBooks);
+      return [];
+    }
+
+    return parsedBooks;
   } catch (error) {
     console.error("LocalStorage okunurken hata oluştu:", error);
     return [];
   }
 }
-
 export function saveBooksToLocalStorage(books) {
   try {
     localStorage.setItem(BOOKS_KEY, JSON.stringify(books));
@@ -124,9 +124,9 @@ export function deleteBookFromLocalStorage(bookId) {
 
 //  Kullanıcı Yönetimi
 export function getUsers() {
-  const users = localStorage.getItem(USERS_KEY);
-  return users ? JSON.parse(users) : []; 
+  return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
 }
+
 export function saveUsers(users) {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
@@ -204,9 +204,10 @@ export function addReview(bookId, userId, review) {
 // **Filtreleme İşlevleri** (Kategori, Dilz ve Sıralama)
 export function getFiltersFromLocalStorage() {
   try {
-    return JSON.parse(filters) || { category: "", language: "", sortOption: "name" };
+    const filters = JSON.parse(localStorage.getItem(FILTERS_KEY)) || DEFAULT_VALUES[FILTERS_KEY];
+    return filters; 
   } catch (error) {
-    console.error("Filtreler yüklenirken JSON hatası:", error);
+    console.error("LocalStorage'dan filtreler okunurken hata oluştu:", error);
     return { category: "", language: "", sortOption: "name" };
   }
 }
@@ -220,11 +221,15 @@ export function saveFiltersToLocalStorage(filters) {
 }
 export function getCategoriesFromLocalStorage() {
   try {
-    const categories = localStorage.getItem(CATEGORIES_KEY);
-    return categories ? JSON.parse(categories) : [];
+    const data = localStorage.getItem("categories");
+    if (!data) {
+      console.log("Kategoriler localStorage'da bulunamadı.");
+      return [];
+    }
+    return JSON.parse(data);  
   } catch (error) {
-    console.error("LocalStorage'dan kategoriler okunurken hata oluştu:", error);
-    return [];
+    console.error("localStorage'dan kategoriler okunurken JSON hatası:", error);
+    return []; 
   }
 }
 
@@ -232,13 +237,13 @@ export function getCategoriesFromLocalStorage() {
 export function getFilteredBooksFromLocalStorage(filters) {
   try {
     let books = getBooksFromLocalStorage();
-    
+
     if (filters.category) {
-      books = books.filter((book) => book.category === filters.category);
+      books = books.filter((book) => (book.category || "").toLowerCase() === filters.category.toLowerCase());
     }
     
     if (filters.language) {
-      books = books.filter((book) => book.language === filters.language);
+      books = books.filter((book) => (book.language || "").toLowerCase() === filters.language.toLowerCase());
     }
 
     if (filters.sortOption === "name") {
@@ -255,4 +260,18 @@ export function getFilteredBooksFromLocalStorage(filters) {
     return [];
   }
 }
+
+// Fiyatı seçilen para birimine dönüştüren fonksiyon
+export function convertPrice(price, fromCurrency, toCurrency, rates) {
+  if (!rates || !rates[fromCurrency] || !rates[toCurrency]) {
+    console.error("Geçersiz döviz kuru verisi.");
+    return price;
+  }
+  
+  // USD'den hedef para birimine dönüşüm
+  const priceInUSD = price / rates[fromCurrency];
+  const convertedPrice = priceInUSD * rates[toCurrency];
+  
+  return convertedPrice;
+} 
 
