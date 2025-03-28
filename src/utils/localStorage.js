@@ -12,7 +12,7 @@ const DEFAULT_VALUES = {
   [USERS_KEY]: JSON.stringify([]),
   [FAVORITES_KEY]: {}, 
   [REVIEWS_KEY]: {}, 
-  [FILTERS_KEY]: { category: "", language: "", sortOption: "name" },
+  [FILTERS_KEY]: { category: "", language: "", sortOption: "" },
 };
 // Asenkron veri çekme fonksiyonu
 async function fetchJSON(file) {
@@ -34,21 +34,45 @@ export async function initializeLocalStorage() {
   try {
     for (const key in DEFAULT_VALUES) {
       if (!localStorage.getItem(key)) {
-        const value = typeof DEFAULT_VALUES[key] === "string"
-        ? await fetchJSON(DEFAULT_VALUES[key]) || [] 
-        : DEFAULT_VALUES[key];
-      
-      localStorage.setItem(key, JSON.stringify(value));
+        let value;
+        
+        // JSON dosyalarını fetch ile alıyoruz
+        if (typeof DEFAULT_VALUES[key] === "string" && DEFAULT_VALUES[key].endsWith(".json")) {
+          try {
+            const response = await fetch(DEFAULT_VALUES[key]);
+            // JSON dosyasını aldıktan sonra, json'a dönüştür
+            value = await response.json();
+          } catch (error) {
+            console.error(`JSON dosyasını yüklerken hata: ${error}`);
+            value = []; 
+          }
+        } else {
+          value = DEFAULT_VALUES[key];
+        }
+        
+        localStorage.setItem(key, JSON.stringify(value));
       }
     }
-    // Eğer filtreler kaydedilmemişse, onları da kaydet
-    if (!localStorage.getItem(FILTERS_KEY)) {
-      saveFiltersToLocalStorage(DEFAULT_VALUES[FILTERS_KEY]);
+
+    // Filtreler kaydedilmemişse kaydet
+    if (!localStorage.getItem("filters")) {
+      saveFiltersToLocalStorage(DEFAULT_VALUES.FILTERS_KEY);
     }
+
   } catch (error) {
     console.error("LocalStorage başlatılırken hata oluştu:", error);
   }
 }
+
+let timeout;
+
+export function saveFavoritesDebounced(favorites) {
+  clearTimeout(timeout);
+  timeout = setTimeout(() => {
+    localStorage.setItem("favoriteBooks", JSON.stringify(favorites));
+  }, 300); 
+}
+
 
 //  Kitap Yönetimi
 // export function getBooksFromLocalStorage() {
@@ -202,7 +226,7 @@ export function addReview(bookId, userId, review) {
   }
 }
 
-// **Filtreleme İşlevleri** (Kategori, Dilz ve Sıralama)
+// **Filtreleme İşlevleri** (Kategori, Dil ve Sıralama)
 export function getFiltersFromLocalStorage() {
   try {
     const filters = JSON.parse(localStorage.getItem(FILTERS_KEY)) || DEFAULT_VALUES[FILTERS_KEY];
@@ -213,13 +237,6 @@ export function getFiltersFromLocalStorage() {
   }
 }
 
-export function saveFiltersToLocalStorage(filters) {
-  try {
-    localStorage.setItem(FILTERS_KEY, JSON.stringify(filters));
-  } catch (error) {
-    console.error("Filtreler LocalStorage'a kaydedilirken hata oluştu:", error);
-  }
-}
 export function getCategoriesFromLocalStorage() {
   try {
     const data = localStorage.getItem("categories");

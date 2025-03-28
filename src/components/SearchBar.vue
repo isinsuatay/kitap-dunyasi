@@ -1,7 +1,7 @@
 <template>
   <div class="search-bar" @focusin="isFocused = true" @focusout="handleBlur">
     <div class="search-icon">
-      <i class="fas fa-search"></i> <!-- Arama ikonu -->
+      <i class="fas fa-search"></i>
     </div>
     <input
       v-model.trim="searchQuery"
@@ -23,62 +23,56 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import { debounce } from 'lodash';
 
 const store = useStore();
 const router = useRouter();
 const searchQuery = ref("");
 const isFocused = ref(false);
-const searchResults = ref([]); // 🔥 Vuex’ten gelen sonuçları burada saklıyoruz
+const searchResults = ref([]);
 
-let timeout = null;
+// Debounced Search (Gecikmeli Arama)
+const debouncedSearch = debounce(() => {
+  if (searchQuery.value.trim()) {
+    store.dispatch("books/searchBooks", searchQuery.value.trim());
+  } else {
+    store.commit("books/setFilteredBooks", []);
+  }
+}, 300);
 
-// **Debounced Search (Gecikmeli Arama)**
-const debouncedSearch = () => {
-  clearTimeout(timeout);
-  timeout = setTimeout(() => {
-    if (searchQuery.value.trim()) {
-      store.dispatch("books/searchBooks", searchQuery.value.trim());
-    } else {
-      store.commit("books/setFilteredBooks", []);
-    }
-  }, 300);
-};
-
-// **Store'daki Sonuçları İzle**
 watch(
   () => store.state.books.filteredBooks,
   (newResults) => {
-    console.log("🔍 Güncellenen Arama Sonuçları:", newResults); // 📌 Konsola yazdır
     searchResults.value = newResults || [];
   },
-  { immediate: true } // 🎯 Uygulama başladığında Vuex’ten sonuçları al
+  { immediate: true } 
 );
 
-// **Kitap detayına git**
+// Kitap detayına git
 const goToBookDetail = (bookId) => {
   if (!bookId) return;
   router.push({ name: "BookDetail", params: { id: bookId } });
-  clearSearch(); // 📌 Sayfa değişince listeyi kapat
+  clearSearch(); 
 };
 
-// **Odak dışına çıkınca listeyi kapat**
+// Odak dışına çıkınca listeyi kapat
 const handleBlur = () => {
   setTimeout(() => {
     isFocused.value = false;
   }, 200);
 };
 
-// **Arama kutusunu temizle ve listeyi kapat**
+// Arama kutusunu temizle ve listeyi kapat
 const clearSearch = () => {
   searchQuery.value = "";
   isFocused.value = false;
   store.commit("books/setFilteredBooks", []);
 };
 
-// **Sayfa değiştiğinde arama listesini temizle**
+// Sayfa değiştiğinde arama listesini temizle
 onMounted(() => {
   router.afterEach(() => {
     clearSearch();
@@ -86,7 +80,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  router.afterEach(() => {}); // Router event’ini temizle
+  router.afterEach(() => {}); 
 });
 </script>
 

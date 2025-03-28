@@ -6,53 +6,101 @@ import {
   updateBookInLocalStorage,
   deleteBookFromLocalStorage,
   initializeLocalStorage,
-  getCategoriesFromLocalStorage,
 } from "@/utils/localStorage";
+
+import { applyFilters } from "@/utils/filters";
+import { sortBooks } from "@/utils/sort";
+import { debounce } from "lodash";
 
 const state = {
   books: [],
   categories: [],
+  languages: [],
   filteredBooks: [],
   favoriteBooks: [],
   featuredBooks: [],
-  languages: [],
   loading: false,
-  minPageCount: null,
-  maxPageCount: null,
-  viewMode: "grid",
-  sortOption: "title",
+  searchQuery: null,
+  viewMode: "grid", 
+  filters: {
+    category: "",
+    language: "",
+    sortOption: "title",
+    minPages: 0,
+    maxPages: Infinity,
+    isFree: false, 
+  },
 };
+
+
+// const saveFavoritesDebounced = debounce((favorites) => {
+//   localStorage.setItem("favoriteBooks", JSON.stringify(favorites));
+// }, 300);
 
 const mutations = {
   setBooks(state, books) {
     state.books = books;
-    state.filteredBooks = books; 
-    // state.filteredBooks = [...books]; 
+    state.filteredBooks = [...books];
     state.featuredBooks = books.filter(book => book.featured);
-    state.languages = [...new Set(books.map(book => book.language).filter(Boolean))];
-    state.categories = [...new Set(books.map(book => book.category).filter(Boolean))];
+  
+    const newCategories = new Set();
+    const newLanguages = new Set();
+  
+    books.forEach(book => {
+      if (book.category) newCategories.add(book.category);
+      if (book.language) newLanguages.add(book.language);
+    });
+  
+    state.categories = [...newCategories];
+    state.languages = [...newLanguages];
+  
     saveBooksToLocalStorage(books);
   },
   addBook(state, book) {
     state.books.push(book);
-    state.filteredBooks = state.books;
+    if (book.featured) state.featuredBooks.push(book);
+  
+    if (book.category && !state.categories.includes(book.category)) {
+      state.categories.push(book.category);
+    }
+    if (book.language && !state.languages.includes(book.language)) {
+      state.languages.push(book.language);
+    }
+  
     addBookToLocalStorage(book);
   },
   updateBook(state, updatedBook) {
     const index = state.books.findIndex((book) => book.id === updatedBook.id);
     if (index !== -1) {
-      state.books[index] = updatedBook;
-      state.filteredBooks = state.books;
+      Object.assign(state.books[index], updatedBook);
       updateBookInLocalStorage(updatedBook);
     }
   },
   deleteBook(state, bookId) {
-    state.books = state.books.filter((book) => book.id !== bookId);
-    state.filteredBooks = state.books;
+    const bookToDelete = state.books.find(book => book.id === bookId);
+    state.books = state.books.filter(book => book.id !== bookId);
+    state.featuredBooks = state.featuredBooks.filter(book => book.id !== bookId);
+  
+    if (bookToDelete) {
+      const hasOtherBooksInCategory = state.books.some(book => book.category === bookToDelete.category);
+      if (!hasOtherBooksInCategory) {
+        state.categories = state.categories.filter(category => category !== bookToDelete.category);
+      }
+  
+      const hasOtherBooksInLanguage = state.books.some(book => book.language === bookToDelete.language);
+      if (!hasOtherBooksInLanguage) {
+        state.languages = state.languages.filter(language => language !== bookToDelete.language);
+      }
+    }
+  
     deleteBookFromLocalStorage(bookId);
   },
   setLoading(state, loading) {
     state.loading = loading;
+  },
+  setFilters(state, filters) {
+    state.filters = { ...filters }; 
+    localStorage.setItem("filters", JSON.stringify(state.filters)); 
   },
   setViewMode(state, mode) {
     state.viewMode = mode;
@@ -60,29 +108,17 @@ const mutations = {
   setSortOption(state, option) {
     state.sortOption = option;
   },
-  toggleFavorite(state, bookId) {
-    if (state.favoriteBooks.includes(bookId)) {
-      state.favoriteBooks = state.favoriteBooks.filter((id) => id !== bookId);
-    } else {
-      state.favoriteBooks.push(bookId);
-    }
-    localStorage.setItem("favoriteBooks", JSON.stringify(state.favoriteBooks));
+  setFavoriteBooks(state, favoriteBooks) {
+    state.favoriteBooks = favoriteBooks;
   },
   setFilteredBooks(state, filteredBooks) {
     state.filteredBooks = filteredBooks;
   },
-  setCategories(state, categories) {
-    state.categories = categories;
-  },
-  setFreeBooks(state, freeBooks) {
-    state.filteredBooks = freeBooks;
-  },
   setFeaturedBooks(state, featuredBooks) {
     state.featuredBooks = featuredBooks;
   },
-  setPageCountFilter(state, { min, max }) {
-    state.minPageCount = min;
-    state.maxPageCount = max;
+  setSearchQuery(state, query) {
+    state.searchQuery = query;
   },
 };
 
@@ -91,21 +127,24 @@ const actions = {
     try {
       commit("setLoading", true);
       await initializeLocalStorage();
-  
       const books = getBooksFromLocalStorage();
-      if (!Array.isArray(books)) {
-        console.error("LocalStorage'daki kitap verisi geçersiz:", books);
-        commit("setBooks", []);
-      } else {
-        commit("setBooks", books);
-      }
+      const favoriteBooks = JSON.parse(localStorage.getItem("favoriteBooks")) || [];
+      const savedFilters = JSON.parse(localStorage.getItem("filters")); 
   
-      const categories = getCategoriesFromLocalStorage();
-      if (!Array.isArray(categories)) {
-        console.error("Kategori verisi geçersiz:", categories);
-        commit("setCategories", []);
+      commit("setBooks", Array.isArray(books) ? books : []);
+      commit("setFavoriteBooks", favoriteBooks);
+  
+      if (savedFilters) {
+        commit("setFilters", savedFilters);
       } else {
-        commit("setCategories", categories);
+        commit("setFilters", {
+          category: "",
+          language: "",
+          sortOption: "title",
+          minPages: 0,
+          maxPages: Infinity,
+          isFree: false,
+        });
       }
     } catch (error) {
       console.error("Kitapları yüklerken hata oluştu:", error);
@@ -113,45 +152,35 @@ const actions = {
       commit("setLoading", false);
     }
   },
-  async loadFeaturedBooks({ commit }) {
-    try {
-      commit("setLoading", true);
-      const books = getBooksFromLocalStorage();
-      const featuredBooks = books.filter((book) => book.featured === true);
-      
-      commit("setFeaturedBooks", featuredBooks);
-    } catch (error) {
-      console.error("Öne çıkan kitapları yüklerken hata oluştu:", error);
-    } finally {
-      commit("setLoading", false);
-    }
+  async searchBooks({ commit, state }, searchQuery) {
+    commit("setSearchQuery", searchQuery);
+    
+    const filteredBooks = applyFilters(state.books, { 
+      ...state.filters, 
+      searchQuery 
+    });
+    
+    commit("setFilteredBooks", filteredBooks);
+  },
+  toggleFavorite({ state, commit }, bookId) {
+    const updatedFavorites = new Set(state.favoriteBooks);
+    updatedFavorites.has(bookId) ? updatedFavorites.delete(bookId) : updatedFavorites.add(bookId);
+    commit("setFavoriteBooks", [...updatedFavorites]);
+    saveFavoritesDebounced([...updatedFavorites]);
   },
   filterBooks({ state, commit }, filters) {
-    let filtered = [...state.books];
-  
-    if (filters.isFree) {
-      filtered = filtered.filter(book => book.price === 0);
-    }
-    if (filters.minPages !== null && filters.minPages !== undefined) {
-      filtered = filtered.filter(book => book.pageCount >= filters.minPages);
-    }
-    if (filters.maxPages !== null && filters.maxPages !== undefined) {
-      filtered = filtered.filter(book => book.pageCount <= filters.maxPages);
-    }
-    if (filters.category) {
-      filtered = filtered.filter(book => book.category?.toLowerCase() === filters.category.toLowerCase());
-    }
-    if (filters.language) {
-      filtered = filtered.filter(book => book.language?.toLowerCase() === filters.language.toLowerCase());
-    }
-  
-    commit("setFilteredBooks", filtered);
+    const newFilters = { ...state.filters, ...filters }; 
+    commit("setFilters", newFilters);
+    
+    const filteredBooks = applyFilters(state.books, newFilters);
+    const sortedBooks = sortBooks(filteredBooks, state.sortOption); 
+    commit("setFilteredBooks", sortedBooks);
   },
-  searchBooks({ state, commit }, searchQuery) {
-    const filtered = state.books.filter((book) =>
-      book.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    commit("setFilteredBooks", filtered); 
+
+  changeSortOption({ commit, state }, option) {
+    commit("setSortOption", option);
+    const sortedBooks = sortBooks(state.filteredBooks || state.books, option);
+    commit("setFilteredBooks", sortedBooks);
   },
   addBook({ commit, rootState }, book) {
     commit("addBook", { ...book, addedBy: rootState.user?.id });
@@ -165,20 +194,6 @@ const actions = {
   changeViewMode({ commit }, mode) {
     commit("setViewMode", mode);
   },
-  changeSortOption({ commit, state }, option) {
-    commit("setSortOption", option);
-    const sortedBooks = sortBooks(state.filteredBooks || state.books, option);
-    commit("setFilteredBooks", sortedBooks);
-  },
-  toggleFavorite({ commit }, bookId) {
-    commit("toggleFavorite", bookId);
-  },
-  getFreeBooks({ commit }) {
-  const books = getBooksFromLocalStorage();
-  const freeBooks = books.filter((book) => book.price === 0);
-  commit("setFreeBooks", freeBooks);
-},
-
 };
 
 const getters = {
@@ -188,29 +203,11 @@ const getters = {
   viewMode: (state) => state.viewMode,
   allBooks: (state) => state.books,
   featuredBooks: (state) => state.featuredBooks || [],
-  sortedBooks: (state) => sortBooks(state.filteredBooks || state.books, state.sortOption),
+  sortedBooks: (state) => computed(() => sortBooks(state.filteredBooks || state.books, state.sortOption)),
   isFavorite: (state) => (bookId) => state.favoriteBooks.includes(bookId),
   getBooksByUser: (state) => (userId) => state.books.filter((book) => book.addedBy === userId),
-  filteredBooksByPageCount: (state) => {
-    return state.filteredBooks.filter(book => {
-      return (
-        (state.minPageCount === null || book.pageCount >= state.minPageCount) &&
-        (state.maxPageCount === null || book.pageCount <= state.maxPageCount)
-      );
-    });
-  },
 };
 
-function sortBooks(books, sortOption) {
-  return [...books].sort((a, b) => {
-    if (sortOption === "name") return a.title.localeCompare(b.title);
-    if (sortOption === "price_asc") return a.price - b.price;
-    if (sortOption === "price_desc") return b.price - a.price;
-    if (sortOption === "publicationDate_newest") return new Date(b.publicationDate) - new Date(a.publicationDate);
-    if (sortOption === "publicationDate_oldest") return new Date(a.publicationDate) - new Date(b.publicationDate);
-    return 0;
-  });
-}
 
 export default {
   namespaced: true,
