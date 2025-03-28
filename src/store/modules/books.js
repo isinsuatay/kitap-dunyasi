@@ -1,3 +1,4 @@
+// store/modules/books.js
 import {
   getBooksFromLocalStorage,
   saveBooksToLocalStorage,
@@ -19,14 +20,14 @@ const state = {
   minPageCount: null,
   maxPageCount: null,
   viewMode: "grid",
-  sortOption: "name",
-  currency: "TRY",
+  sortOption: "title",
 };
 
 const mutations = {
   setBooks(state, books) {
     state.books = books;
-    state.filteredBooks = [...books]; 
+    state.filteredBooks = books; 
+    // state.filteredBooks = [...books]; 
     state.featuredBooks = books.filter(book => book.featured);
     state.languages = [...new Set(books.map(book => book.language).filter(Boolean))];
     state.categories = [...new Set(books.map(book => book.category).filter(Boolean))];
@@ -65,16 +66,10 @@ const mutations = {
     } else {
       state.favoriteBooks.push(bookId);
     }
+    localStorage.setItem("favoriteBooks", JSON.stringify(state.favoriteBooks));
   },
-  setConvertedPrices(state, { currency, conversionRate }) {
-    state.books = state.books.map((book) => ({
-      ...book,
-      convertedPrice: (book.price * conversionRate).toFixed(2),
-      currency: currency,
-    }));
-  },
-  setFilteredBooks(state, books) {
-    state.filteredBooks = books;
+  setFilteredBooks(state, filteredBooks) {
+    state.filteredBooks = filteredBooks;
   },
   setCategories(state, categories) {
     state.categories = categories;
@@ -82,15 +77,12 @@ const mutations = {
   setFreeBooks(state, freeBooks) {
     state.filteredBooks = freeBooks;
   },
-  setFeaturedBooks(state, books) {
-    state.featuredBooks = books;
+  setFeaturedBooks(state, featuredBooks) {
+    state.featuredBooks = featuredBooks;
   },
   setPageCountFilter(state, { min, max }) {
     state.minPageCount = min;
     state.maxPageCount = max;
-  },
-  ADD_MORE_BOOKS(state, newBooks) {
-    state.books = [...state.books, ...newBooks];
   },
 };
 
@@ -100,27 +92,21 @@ const actions = {
       commit("setLoading", true);
       await initializeLocalStorage();
   
-      // Kitapları LocalStorage'dan al
       const books = getBooksFromLocalStorage();
-      
       if (!Array.isArray(books)) {
         console.error("LocalStorage'daki kitap verisi geçersiz:", books);
-        commit("setBooks", []); // Geçersiz veri varsa boş dizi ata
+        commit("setBooks", []);
       } else {
         commit("setBooks", books);
       }
   
-      // Kategorileri LocalStorage'dan al
       const categories = getCategoriesFromLocalStorage();
-      console.log("Kategoriler:", categories);
-  
       if (!Array.isArray(categories)) {
         console.error("Kategori verisi geçersiz:", categories);
-        commit("setCategories", []); // Kategoriler geçersizse boş dizi ata
+        commit("setCategories", []);
       } else {
         commit("setCategories", categories);
       }
-      
     } catch (error) {
       console.error("Kitapları yüklerken hata oluştu:", error);
     } finally {
@@ -130,11 +116,8 @@ const actions = {
   async loadFeaturedBooks({ commit }) {
     try {
       commit("setLoading", true);
-      await initializeLocalStorage();
       const books = getBooksFromLocalStorage();
-      
-      // Öne çıkan kitapları belirlemek için örnek bir kriter:
-      const featuredBooks = books.filter((book) => book.isFeatured === true);
+      const featuredBooks = books.filter((book) => book.featured === true);
       
       commit("setFeaturedBooks", featuredBooks);
     } catch (error) {
@@ -144,30 +127,24 @@ const actions = {
     }
   },
   filterBooks({ state, commit }, filters) {
-    console.log("Vuex filterBooks çalıştı, gelen filtreler:", filters);
     let filtered = [...state.books];
   
-    if (!filters.category && !filters.language && filters.minPages === null && filters.maxPages === null && !filters.isFree) {
-      filtered = state.books; // Filtreleme yoksa tüm kitapları göster
-    } else {
-      if (filters.isFree) filtered = filtered.filter((book) => book.price === 0);
-      if (filters.minPages !== null) filtered = filtered.filter((book) => book.pageCount >= filters.minPages);
-      if (filters.maxPages !== null) filtered = filtered.filter((book) => book.pageCount <= filters.maxPages);
-      
-      if (filters.category) {
-        console.log("Kategoriye göre filtreleme yapılıyor:", filters.category);
-        filtered = filtered.filter((book) => book.category?.toLowerCase() === filters.category.toLowerCase());
-      }
-  
-      if (filters.language) {
-        console.log("Dile göre filtreleme yapılıyor:", filters.language);
-        filtered = filtered.filter((book) => book.language?.toLowerCase() === filters.language.toLowerCase());
-      }
+    if (filters.isFree) {
+      filtered = filtered.filter(book => book.price === 0);
+    }
+    if (filters.minPages !== null && filters.minPages !== undefined) {
+      filtered = filtered.filter(book => book.pageCount >= filters.minPages);
+    }
+    if (filters.maxPages !== null && filters.maxPages !== undefined) {
+      filtered = filtered.filter(book => book.pageCount <= filters.maxPages);
+    }
+    if (filters.category) {
+      filtered = filtered.filter(book => book.category?.toLowerCase() === filters.category.toLowerCase());
+    }
+    if (filters.language) {
+      filtered = filtered.filter(book => book.language?.toLowerCase() === filters.language.toLowerCase());
     }
   
-    console.log("Filtreleme sonrası kitaplar:", filtered);
-  
-    filtered = sortBooks(filtered, state.sortOption);
     commit("setFilteredBooks", filtered);
   },
   searchBooks({ state, commit }, searchQuery) {
@@ -195,18 +172,6 @@ const actions = {
   },
   toggleFavorite({ commit }, bookId) {
     commit("toggleFavorite", bookId);
-  },
-  changeCurrency({ commit }, currency) {
-    const exchangeRates = {
-      TRY: 1,
-      USD: 0.032,
-      EUR: 0.029,
-    };
-    if (!exchangeRates[currency]) {
-      console.error("Geçersiz para birimi seçildi!");
-      return;
-    }
-    commit("setConvertedPrices", { currency, conversionRate: exchangeRates[currency] });
   },
   getFreeBooks({ commit }) {
   const books = getBooksFromLocalStorage();
@@ -254,3 +219,4 @@ export default {
   actions,
   getters,
 };
+
