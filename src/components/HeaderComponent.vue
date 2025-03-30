@@ -55,7 +55,6 @@ const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
 };
 
-// Sayfa geçişi sırasında menüyü kapat
 watch(menuOpen, (newValue) => {
   if (newValue) {
     router.afterEach(() => {

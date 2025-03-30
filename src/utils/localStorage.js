@@ -1,4 +1,3 @@
-// utils/localStorage.js
 const BOOKS_KEY = "books";
 const CATEGORIES_KEY = "categories";
 const USERS_KEY = "users";
@@ -147,19 +146,35 @@ export function deleteBookFromLocalStorage(bookId) {
   }
 }
 
-//  Kullanıcı Yönetimi
+// Kullanıcıları getir
 export function getUsers() {
-  return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+  const users = localStorage.getItem("users");
+  if (!users) {
+    return []; 
+  }
+  try {
+    const parsedUsers = JSON.parse(users);
+    return Array.isArray(parsedUsers) ? parsedUsers : []; 
+  } catch (error) {
+    return []; 
+  }
 }
 
+// Kullanıcıları kaydet
 export function saveUsers(users) {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 }
 
+// Yeni kullanıcı ekle
 export function addUser(user) {
   const users = getUsers();
   users.push(user);
   saveUsers(users);
+}
+
+export function getUserByEmail(email) {
+  const users = getUsers();
+  return users.find((user) => user.email === email) || null;
 }
 
 //  Favori Kitap Yönetimi (Kullanıcı Bazlı)

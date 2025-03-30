@@ -35,7 +35,7 @@ import { useStore } from "vuex";
 const store = useStore();
 const currentIndex = ref(0);
 const autoplayInterval = ref(null);
-const defaultImage = "https://via.placeholder.com/800x300?text=No+Image"; // Varsayılan resim
+const defaultImage = "https://via.placeholder.com/800x300?text=No+Image";
 
 // Featured kitapları Vuex store'dan alıyoruz, eğer boşsa boş dizi döndürüyoruz
 const featuredBooks = computed(() => {
