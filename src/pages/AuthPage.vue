@@ -22,7 +22,7 @@
               <input type="text" v-model="lastName" placeholder="Soyadınız" required />
             </div>
 
-            <p v-if="!isLogin" class="password-note">
+            <div v-if="!isLogin" class="password-note">
               * Şifreniz aşağıdaki gereksinimleri karşılamalıdır:
               <ul>
                 <li :class="{ valid: passwordRules.length, invalid: !passwordRules.length }">
@@ -41,7 +41,7 @@
                    En az bir özel karakter (!@#$%^&* gibi) içermeli.
                 </li>
               </ul>
-            </p>
+            </div>
 
             <button type="submit">{{ isLogin ? 'Giriş Yap' : 'Kayıt Ol' }}</button>
           </form>

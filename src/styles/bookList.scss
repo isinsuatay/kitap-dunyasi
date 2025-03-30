@@ -123,7 +123,7 @@
     
     .book-list {
       display: grid;
-      grid-template-columns: repeat(4, minmax(200px, 1fr)); 
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
       gap: 20px;
       transition: transform vars.$transition-speed ease;
       
@@ -145,7 +145,13 @@
 
   @media (max-width: 1024px) {
     .book-list {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .sidebar {
+      max-width: 250px;
+      padding: 15px;
     }
   }
   
@@ -156,16 +162,24 @@
     .sidebar {
       max-width: 100%;
       width: 100%;
+      padding: 15px;
+      text-align: center;
     }
     
     .book-list {
       grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
     }
   }
   
   @media (max-width: 480px) {
     .book-list {
       grid-template-columns: 1fr !important;
+      gap: 10px;
+    }
+
+    .sidebar {
+      padding: 10px;
     }
   }
 }
