@@ -11,10 +11,10 @@
 
 .auth-box {
   position: relative;
-  background: white;
+  background: $white;
   padding: 40px 30px 30px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px $shadow-dark; 
   text-align: center;
   width: 500px;
   max-height: 90vh; 
@@ -25,7 +25,7 @@
 .welcome-message {
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: $text-color-light;
   margin-top: 50px;
   text-align: center;
 }
@@ -37,7 +37,7 @@
   padding: 0.1rem;
   transform: translateX(-50%);
   display: flex;
-  background: #ece9e9;
+  background: $background-light;
   border-radius: 15px;
   overflow: hidden;
   width: 100%;
@@ -61,19 +61,19 @@
   }
 
   button.active {
-    color: rgb(69, 65, 65);
-  }
+    color: $gray-dark;
+    }
 
   .slider-background {
     position: absolute;
     top: 7px;
     width: 49%;
     height: 40px;
-    background: #f1f1f1;
+    background: $background-light;
     border-radius: 15px;
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  }
+    box-shadow: 0 4px 10px $shadow-dark;
+    }
 
   .slider-background.right {
     transform: translateX(100%);
@@ -90,13 +90,13 @@ input {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
-  border: 1px solid #ccc;
+  border: 1px solid $gray;
   border-radius: 5px;
 }
 
 button {
-  background: #007bff;
-  color: white;
+  background: $primary-color;
+  color: $white;
   padding: 10px;
   border: none;
   border-radius: 5px;
@@ -105,19 +105,18 @@ button {
 }
 
 .toggle-text {
-  color: #007bff;
   cursor: pointer;
   margin-top: 10px;
   transition: color 0.3s;
 
   &:hover {
-    color: #0056b3;
+    color: $primary-hover;
   }
 }
 
 .password-note {
   font-size: 0.9em;
-  color: #ff5722;
+  color: $danger;
   padding: 10px;
   border-radius: 5px;
   margin-top: 5px;
@@ -129,15 +128,23 @@ button {
     li {
       padding: 5px 0;
       &.valid {
-        color: green;
+        color: $fresh-green;
       }
       &.invalid {
-        color: red;
+        color: $danger;
       }
     }
   }
 }
+.forgot-password {
+  cursor: pointer;
+  text-decoration: underline; 
+  transition: color 0.3s ease;
+}
 
+.forgot-password:hover {
+  color: $primary-hover;
+}
 @keyframes fadeIn {
   from {
     opacity: 0;

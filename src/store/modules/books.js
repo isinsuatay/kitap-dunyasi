@@ -166,7 +166,7 @@ const actions = {
     const updatedFavorites = new Set(state.favoriteBooks);
     updatedFavorites.has(bookId) ? updatedFavorites.delete(bookId) : updatedFavorites.add(bookId);
     commit("setFavoriteBooks", [...updatedFavorites]);
-    saveFavoritesDebounced([...updatedFavorites]);
+    // saveFavoritesDebounced([...updatedFavorites]);
   },
   filterBooks({ state, commit }, filters) {
     const newFilters = { ...state.filters, ...filters }; 

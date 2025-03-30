@@ -1,4 +1,6 @@
-@use "@/styles/variables" as vars;
+@use "@/styles/variables.scss" as *;
+@use "@/styles/variables.scss" as vars;
+@use "sass:color";
 
 .book-list-container {
   display: flex;
@@ -11,8 +13,8 @@
     max-width: 300px;
     background-color:#f0f0f0;
     padding: 20px;
-    border-radius: vars.$border-radius;
-    box-shadow: 0 4px 8px vars.$shadow-light;
+    border-radius:$border-radius;
+    box-shadow: 0 4px 8px $shadow-light;
     transition: transform 0.3s ease-in-out;
 
     &:hover {
@@ -22,7 +24,7 @@
     h3 {
       font-size: 1.5rem;
       margin-bottom: 15px;
-      color: vars.$primary;
+      color:$primary-color;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -57,8 +59,8 @@
           border: 1px solid rgb(240, 237, 237) ;    
           
           &:focus {
-            border-color: vars.$primary;      
-            box-shadow: 0 0 5px vars.$primary;  
+            border-color:$primary-color;      
+            box-shadow: 0 0 5px $primary-color;  
           }
         }
       }
@@ -91,8 +93,8 @@
         }
       }
       .clear-filters {
-        background-color: vars.$secondary-color;
-        color: vars.$white;
+        background-color:$secondary-color;
+        color: $white;
         padding: 10px;
         border: none;
         border-radius: vars.$border-radius;
@@ -103,7 +105,7 @@
         transition: background-color vars.$transition-speed ease;
         
         &:hover {
-          background-color: vars.$primary-hover;
+          background-color:$primary-hover;
         }
         
         &::before {
@@ -133,11 +135,11 @@
     
     .no-books {
       font-size: 1.5rem;
-      color: vars.$text-color-light;
+      color: $text-color-light;
       text-align: center;
       padding: 50px;
       border-radius: vars.$border-radius;
-      background-color: vars.$background-light;
+      background-color: $background-light;
     }
   }
 

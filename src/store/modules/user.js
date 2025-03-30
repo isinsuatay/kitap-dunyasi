@@ -22,9 +22,17 @@ export default {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     },
-    updateUser(state, updatedUser) {
-      state.user = { ...state.user, ...updatedUser };
-      localStorage.setItem("user", JSON.stringify(state.user));
+    updateUser(state, userData) {
+      state.user = userData;
+      localStorage.setItem("user", JSON.stringify(userData));
+  
+      let users = JSON.parse(localStorage.getItem("users")) || []; 
+  
+      users = users.map((user) => 
+        user.email === userData.email ? { ...user, ...userData } : user
+      );
+  
+      localStorage.setItem("users", JSON.stringify(users));
     },
   },
   actions: {
@@ -32,7 +40,6 @@ export default {
       const user = getUserByEmail(email); 
       if (!user || !bcrypt.compareSync(password, user.password)) {
         throw new Error("Geçersiz e-posta veya şifre!");
-        return;
       }
 
       const token = `fake-jwt-token-${Date.now()}`;
@@ -71,10 +78,8 @@ export default {
       commit("setToken", `fake-jwt-token-${Date.now()}`);
     },
 
-    updateUser(state, updatedUser) {
-      const updatedUserData = { ...state.user, ...updatedUser };
-      state.user = updatedUserData;
-      localStorage.setItem("user", JSON.stringify(updatedUserData)); 
+    updateUser({ commit }, updatedUser) {  
+      commit("updateUser", updatedUser);
     },
   },
   

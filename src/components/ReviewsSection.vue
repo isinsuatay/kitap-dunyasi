@@ -137,7 +137,7 @@ const saveEdit = (review) => {
     updatedRating: updatedReviewRating.value
   });
 
-  editingReview.value = null; // Düzenleme modundan çık
+  editingReview.value = null; 
 };
 
 const formatDate = (dateString) => {

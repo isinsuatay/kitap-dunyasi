@@ -1,15 +1,16 @@
+@use "@/styles/variables.scss" as *;
+@use "sass:color";
 .add-book {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f4f7fa;
   padding: 20px;
   font-family: 'Arial', sans-serif;
 }
 
 .wizard {
-  background-color: #fff;
+  background-color: $white;
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -19,7 +20,7 @@
 
   h2 {
     font-size: 1.8rem;
-    color: #333;
+    color: $text-color;
     margin-bottom: 20px;
     text-align: center;
     font-weight: bold;
@@ -29,7 +30,7 @@
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
-    border: 1px solid #ddd;
+    border: 1px solid $light-gray;
     border-radius: 5px;
     font-size: 1rem;
     background-color: #fafafa;
@@ -37,7 +38,7 @@
   }
 
   input:focus, select:focus, textarea:focus {
-    border-color: #2e8b57; 
+    border-color: $green-hover; 
     outline: none;
   }
 
@@ -50,7 +51,7 @@
   select {
     padding: 12px;
     background-color: #fafafa;
-    border: 1px solid #ddd;
+    border: 1px solid $light-gray;
   }
 
   textarea {
@@ -67,37 +68,37 @@
   button {
     padding: 12px 20px;
     border: none;
-    background-color: #2e8b57;
-    color: white;
+    background-color: $fresh-green;
+    color: $white;
     font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: #248f45;
+      background-color: $green-hover;
     }
 
     &:disabled {
-      background-color: #ddd;
+      background-color: $light-gray;
       cursor: not-allowed;
     }
   }
 
   .buttons button:first-child {
-    background-color: #f4b400;
+    background-color: $golden-yellow;
   }
 
   .buttons button:first-child:hover {
-    background-color: #e19b00;
+    background-color: $gold;
   }
 
   .buttons button:last-child {
-    background-color: #2e8b57;
+    background-color: $fresh-green;
   }
 
   .buttons button:last-child:hover {
-    background-color: #248f45;
+    background-color: $green-hover;
   }
 }
 

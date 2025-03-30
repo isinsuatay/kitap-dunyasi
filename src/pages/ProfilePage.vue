@@ -120,8 +120,10 @@ const closeEditModal = () => {
 };
 
 const saveUserInfo = () => {
-  store.dispatch("updateUser", editedUser.value);
-  closeEditModal();
+  store.dispatch("updateUser", editedUser.value).then(() => {
+    localStorage.setItem("user", JSON.stringify(editedUser.value));
+    closeEditModal();
+  });
 };
 
 

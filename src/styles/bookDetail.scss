@@ -17,22 +17,22 @@
   position: absolute;
   top: 20px;
   left: 20px;
-  background-color: #f44336;
-  color: white;
+  background-color: $danger;
+  color: $white;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: #e53935;
+    background-color: $danger-dark;
   }
 }
 
 .book-detail-card {
   display: flex;
   gap: 20px;
-  background: white;
+  background: $white;
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
@@ -68,14 +68,14 @@
 .book-favorite-btn {
   padding: 10px 20px;
   margin-top: 20px;
-  background-color: #4CAF50;
-  color: white;
+  background-color: $fresh-green;
+  color: $white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
   &:hover {
-    background-color: #45a049;
+    background-color: $green-hover;
   }
 }
 
@@ -88,8 +88,8 @@
 }
 
 .social-toggle-btn {
-  background-color: #4CAF50;
-  color: white;
+  background-color: $fresh-green;
+  color: $white;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -98,7 +98,7 @@
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #45a049;
+    background-color: $green-hover;
   }
 }
 
@@ -120,19 +120,19 @@
 
 .social-icon {
   font-size: 2rem;
-  color: #333;
+  color: $text-color;
   transition: all 0.3s ease-in-out;
   display: inline-block;
   border-radius: 50%;
   padding: 12px;
-  background-color: #fff;
+  background-color: $white;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 
   &:hover {
     transform: scale(1.1);
-    background-color: #4CAF50;
-    color: #fff;
+    background-color: $fresh-green;
+    color: $white;
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
   }
 }
@@ -162,7 +162,7 @@
     width: 150px;
     text-align: center;
     padding: 10px;
-    background: white;
+    background: $white;
     border-radius: 6px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
@@ -176,15 +176,15 @@
 
   .view-book-btn {
     margin-top: 10px;
-    background: #007bff;
-    color: white;
+    background: $primary-color;
+    color: $white;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 4px;
 
     &:hover {
-      background: #0056b3;
+      background: $primary-hover;
     }
   }
 }

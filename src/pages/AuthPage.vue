@@ -54,7 +54,7 @@
       </p>
       
       <p v-if="isLogin" @click="forgotPassword" class="forgot-password">Şifremi Unuttum</p>
-    </div>
+        </div>
   </div>
 </template>
 
@@ -132,6 +132,34 @@ const handleSubmit = async () => {
   } catch (error) {
     Swal.fire("Hata", error.message, "error");
   }
+};
+const forgotPassword = () => {
+  Swal.fire({
+    title: 'Şifrenizi mi unuttunuz?',
+    input: 'email',
+    inputPlaceholder: 'E-Postanızı girin',
+    showCancelButton: true,
+    confirmButtonText: 'Şifreyi Sıfırla',
+    cancelButtonText: 'İptal',
+    inputValidator: (value) => {
+      if (!value) {
+        return 'Lütfen e-posta adresinizi girin!';
+      }
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(); 
+        }, 1000);
+      });
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire(
+        'Şifre sıfırlama linki gönderildi!',
+        'E-posta adresinize şifre sıfırlama talimatı gönderildi.',
+        'success'
+      );
+    }
+  });
 };
 </script>
 

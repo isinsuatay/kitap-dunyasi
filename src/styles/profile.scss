@@ -1,8 +1,10 @@
+@use "@/styles/variables.scss" as *;
+@use "sass:color";
+
 .profile-container {
   display: flex;
   max-width: 1000px;
   margin: 50px auto;
-  background: #f0f4f8;
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -10,7 +12,7 @@
 
 .sidebar {
   width: 240px;
-  background: #34495e;
+  background: $steel-blue;
   padding: 20px;
   border-radius: 12px 0 0 12px;
   display: flex;
@@ -26,7 +28,7 @@
 
   li {
     padding: 12px;
-    color: white;
+    color: $white;
     cursor: pointer;
     border-radius: 8px;
     font-size: 16px;
@@ -35,20 +37,20 @@
 
     &:hover,
     &.active {
-      background: #2c3e50;
+      background: rgb(38, 89, 131);
       transform: scale(1.05);
     }
   }
 
   .logout {
     margin-top: 20px;
-    color: crimson;
+    color: $danger;
     font-weight: bold;
     font-size: 18px;
     width: 100%;
 
     &:hover {
-      background: darkred;
+      background: $danger-dark;
     }
   }
 }
@@ -57,14 +59,14 @@
 .profile-content {
   flex-grow: 1;
   padding: 30px;
-  background: white;
+  background: $white;
   border-radius: 0 12px 12px 0;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .profile-card {
   padding: 20px;
-  background: #ffffff;
+  background: $white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
@@ -73,7 +75,7 @@
     margin-bottom: 15px;
     font-size: 22px;
     font-weight: 600;
-    color: #34495e;
+    color: $steel-blue;
   }
 
   p {
@@ -98,7 +100,7 @@
 }
 
 .modal {
-  background: white;
+  background: $white;
   padding: 25px;
   border-radius: 12px;
   width: 400px;
@@ -109,7 +111,7 @@
   h3 {
     margin-bottom: 20px;
     font-size: 20px;
-    color: #34495e;
+    color: $text-color;
   }
 
   input {
@@ -139,18 +141,18 @@ button {
 }
 
 .save-btn {
-  background: #28a745;
-  color: white;
+  background: $fresh-green;
+  color: $white;
   &:hover {
-    background: #218838;
+    background: $green-hover;
   }
 }
 
 .cancel-btn {
-  background: #dc3545;
-  color: white;
+  background: $danger;
+  color: $white;
   &:hover {
-    background: #c82333;
+    background: $danger-dark;
   }
 }
 
