@@ -65,14 +65,6 @@
       <div v-if="step === 2">
         <h2>Görsel Yükleme</h2>
         <input type="file" @change="handleImageUpload" />
-
-        <!-- Resim Yüklendiyse Göster ve Silme Butonu Ekle -->
-        <div v-if="book.cover">
-          <img :src="book.cover" alt="Kitap Görseli" />
-          <button @click="removeImage" class="remove-image-btn">
-            Resmi Sil
-          </button>
-        </div>
       </div>
 
       <!-- 3. ADIM: Fiyat Bilgisi -->
@@ -163,13 +155,13 @@ export default {
     };
   },
   computed: {
-  ...mapState("user", ["user"]),
-  ...mapState("currency", ["selectedCurrency", "exchangeRates"]),
-  ...mapGetters("currency", ["convertPrice"]),
+    ...mapState("user", ["user"]),
+    ...mapState("currency", ["selectedCurrency", "exchangeRates"]),
+    ...mapGetters("currency", ["convertPrice"]),
 
-  convertedPrice() {
-    return this.convertPrice(this.book.price, this.book.currency);
-  },
+    convertedPrice() {
+      return this.convertPrice(this.book.price, this.book.currency);
+    },
   },
   methods: {
     ...mapActions("currency", ["fetchExchangeRates"]),
@@ -236,25 +228,23 @@ export default {
 
       const reader = new FileReader();
       reader.onload = () => {
-        this.book.cover = reader.result; // Base64 formatında kaydediyor
+        this.book.cover = reader.result; 
         console.log("Yüklenen Resim (Base64):", this.book.cover);
       };
       reader.readAsDataURL(file);
     },
-    // Uyarı gösteren yardımcı fonksiyon
     showError(title, text) {
       Swal.fire({ icon: "error", title, text });
     },
 
     saveBook() {
       if (!this.book.description || this.book.description.trim() === "") {
-    this.showError("Hata", "Lütfen kitap özeti giriniz.");
-    return;
-  }
+        this.showError("Hata", "Lütfen kitap özeti giriniz.");
+        return;
+      }
       if (!this.book.id) {
         this.book.id = Date.now().toString();
       }
-      // addedBy kontrolü
       this.book.addedBy = this.user && this.user.id ? this.user.id : "anonim";
 
       addBookToLocalStorage(this.book);
@@ -292,5 +282,4 @@ export default {
 
 <style lang="scss">
 @use "@/styles/addBook";
-</style> 
-
+</style>

@@ -19,7 +19,7 @@
 
 .sidebar {
   width: 240px;
-  background: $steel-blue;
+  background: $gray-dark;
   padding: 20px;
   border-radius: 12px 0 0 12px;
   display: flex;
@@ -61,7 +61,7 @@
 
     &:hover,
     &.active {
-      background: rgb(38, 89, 131);
+      background: $gray;
       transform: scale(1.05);
     }
 

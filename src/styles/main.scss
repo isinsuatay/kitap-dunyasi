@@ -71,6 +71,24 @@ button {
   }
 }
 
+button {
+  background: $secondary-color;
+  color: $white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+
+  &:hover {
+    color: color.adjust($text-color, $lightness: 15%);
+    transform: scale(1.05);
+  }
+  &:hover {
+    background: $danger-dark;
+  }
+}
+
 // Fade In Animasyonu
 @keyframes fadeIn {
   from {
@@ -86,3 +104,4 @@ button {
 .fade-in {
   animation: fadeIn 0.5s ease-in-out;
 }
+
