@@ -10,7 +10,7 @@ Kitap Dünyası Pro, modern JavaScript teknolojileri ve araçlarıyla geliştiri
 	•	Gelişmiş Arama ve Filtreleme: Kitapları filtreleme ve arama özellikleri ile kullanıcılar hızlıca istedikleri kitaplara ulaşabilirler.
 
 ## 🌍 Demo
-[https://kitap-dunyasi-pro-c64n.vercel.app]
+[https://kitap-dunyasi-pied.vercel.app]
 
 ## 🚀 Kurulum
 
