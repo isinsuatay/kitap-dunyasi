@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import * as path from 'path';
 
 export default defineConfig({
+  base: '/', 
   plugins: [vue()],
   resolve: {
     alias: {
@@ -10,16 +11,17 @@ export default defineConfig({
     },
   },
   build: {
-    minify: 'esbuild', 
+    minify: 'esbuild',
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
             const parts = id.split('node_modules/');
-            return parts[parts.length - 1].split('/')[0].toString(); 
+            return parts[parts.length - 1].split('/')[0].toString();
           }
         },
       },
     },
   },
 });
+

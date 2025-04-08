@@ -11,6 +11,10 @@
   margin: 0 auto;
   gap: 20px;
   position: relative;
+
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
 }
 
 .back-button {
@@ -27,6 +31,12 @@
   &:hover {
     background-color: $danger-dark;
   }
+
+  @media (max-width: 768px) {
+    top: 10px;
+    left: 10px;
+    padding: 8px 16px;
+  }
 }
 
 .book-detail-card {
@@ -35,9 +45,17 @@
   background: $white;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 10px $box-shadow-light;
   max-width: 800px;
   width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+  }
 }
 
 .book-cover {
@@ -45,6 +63,11 @@
   height: 300px;
   object-fit: cover;
   border-radius: 10px;
+
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 225px;
+  }
 }
 
 .book-info {
@@ -53,6 +76,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-width: 250px;
 
   h1 {
     font-size: 2rem;
@@ -62,6 +86,11 @@
   p {
     font-size: 1rem;
     margin: 5px 0;
+  }
+
+  @media (max-width: 768px) {
+    padding-left: 0;
+    text-align: center;
   }
 }
 
@@ -85,6 +114,11 @@
   gap: 10px;
   justify-content: flex-start;
   margin-left: 20px;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+    text-align: center;
+  }
 }
 
 .social-toggle-btn {
@@ -126,14 +160,14 @@
   border-radius: 50%;
   padding: 12px;
   background-color: $white;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 12px $box-shadow-light;
   cursor: pointer;
 
   &:hover {
     transform: scale(1.1);
     background-color: $fresh-green;
     color: $white;
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 6px 15px $box-shadow-dark;
   }
 }
 
@@ -155,6 +189,10 @@
     overflow-x: auto;
     padding-bottom: 10px;
     
+    @media (max-width: 768px) {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
   }
 
   .related-book-card {
@@ -164,7 +202,11 @@
     padding: 10px;
     background: $white;
     border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px $box-shadow-light;
+
+    @media (max-width: 768px) {
+      width: 120px;
+    }
   }
 
   .related-book-image {

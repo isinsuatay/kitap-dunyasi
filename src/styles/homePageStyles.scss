@@ -4,88 +4,53 @@
 .home-page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-  animation: fadeIn 1s ease-in-out;
+  gap: 40px;
+  padding: 30px;
 
-  // Hero Bölümü
   .hero-section {
     text-align: center;
-    background: linear-gradient(135deg, $primary-color, $secondary-color); 
-    color: $white;
+    color: $background-dark;
     padding: 60px 20px;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease-in-out;
+    margin-bottom: 1rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px $box-shadow-dark;
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 3rem;
       font-weight: bold;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
     }
 
     p {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       margin-top: 10px;
     }
 
-    &:hover {
-      transform: scale(1.02);
-    }
-  }
+    .cta-button {
+      margin-top: 20px;
+      padding: 12px 30px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: $white;
+      background-color:cadetblue;
+      border: none;
+      border-radius: 30px;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
 
-  // Butonlar
-  button {
-    background: $primary-color; 
-    color: $white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.3s;
-
-    &:hover {
-      color: color.adjust($text-color, $lightness: 15%);
-      transform: scale(1.05);
-    }
-
-    &.clear-filters {
-      background: $danger; 
 
       &:hover {
-        background: $danger-dark; 
+        background-color: darken($gold, 10%);
       }
     }
+    
+    
   }
 
+  .book-carousel {
+    margin-bottom: 30px;
+  }
 
 }
 
-// Animasyonlar
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 
-
-
-// Mobil uyumluluk
-@media (max-width: 768px) {
-  .home-page {
-    padding: 15px;
-
-    .filters,
-    .sort-options {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .book-list {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    }
-  }
-}

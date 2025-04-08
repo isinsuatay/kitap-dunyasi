@@ -1,6 +1,13 @@
-# Kitap Dünyası Pro
+Kitap Dünyası Pro
 
-Kitap Dünyası Pro, kullanıcıların kitapları listeleyip yönetebildiği, favorilere ekleyip yorum yapabildiği Vue 3 tabanlı bir web uygulamasıdır. Proje, modern JavaScript teknolojileri kullanılarak geliştirilmiştir.
+Kitap Dünyası Pro, kullanıcıların kitapları listeleyip yönetebildiği, favorilere ekleyip yorum yapabildiği, Vue 3 tabanlı bir web uygulamasıdır. Bu proje, kitap yönetimi, kitaplara yorum ekleme ve favorilere ekleme gibi işlemleri kolaylaştırarak, kullanıcıların kitap dünyasına daha derinlemesine bir bağ kurmalarını sağlar. Ayrıca, döviz kurları gibi ek özelliklerle kullanıcı deneyimini zenginleştirir.
+
+Kitap Dünyası Pro, modern JavaScript teknolojileri ve araçlarıyla geliştirilmiştir ve aşağıdaki özellikleri sunar:
+	•	Kitap Listeleme ve Yönetim: Kullanıcılar, kitapları listeleyebilir, arama yapabilir, kitapları favorilerine ekleyebilir ve kitaplar hakkında yorumlar bırakabilir.
+	•	Döviz Kurları: Döviz kurları API’si ile güncel döviz kurlarını kullanıcıya sunar. Bu özellik, döviz kurları bilgilerini 30 dakikada bir günceller, böylece her zaman güncel bilgilere erişebilirsiniz.
+	•	Kullanıcı Dostu Arayüz: Kullanıcıların kitaplarla etkileşimde bulunmalarını kolaylaştıran, minimalist ve modern bir arayüz sağlar.
+	•	Yorumlar ve Favoriler: Kullanıcılar, kitaplar hakkında yorum yapabilir ve favorilerine ekleyebilirler.
+	•	Gelişmiş Arama ve Filtreleme: Kitapları filtreleme ve arama özellikleri ile kullanıcılar hızlıca istedikleri kitaplara ulaşabilirler.
 
 ## 🌍 Demo
 [https://kitap-dunyasi-pro-c64n.vercel.app]
@@ -47,20 +54,8 @@ npm run preview
 - **FontAwesome** - İkonlar için
 - **SweetAlert2** - Kullanıcı dostu uyarı mesajları
 - **Vue Carousel** - Kitap kaydırma bileşeni
-- **Quill Editor** - Zengin metin düzenleyici
 - **UUID** - Benzersiz kimlik oluşturma
-- **Teleport** -  Modalları yönetmek için kullanıldı
 
-
-## ⚠️ Karşılaşılan Zorluklar ve Çözümler
-
-### 1. **Vuex Persisted State ile Veri Saklama**
-Sorun: Sayfa yenilendiğinde Vuex verilerinin kaybolması.  
-Çözüm: `vuex-persistedstate` eklentisi kullanılarak veriler **localStorage**'a kaydedildi.
-
-### 2. **Döviz Kurları API Kullanımı**
-Sorun: API çağrılarının fazla olması.  
-Çözüm: Döviz kurları **30 dakikada bir** güncellenecek şekilde `setInterval` ile optimize edildi.
 
 ## 🏗️ Mimari Kararlar
 
@@ -68,6 +63,10 @@ Sorun: API çağrılarının fazla olması.
 - **State Management:** Vuex kullanılarak global state yönetildi.
 - **Lazy Loading:** Sayfalar **lazy load** ile yüklenerek performans artırıldı.
 - **SCSS Kullanımı:** Stil yönetimi daha esnek hale getirildi.
+- **Vuex Persisted State:** Kullanıcı verileri, sayfa yenilense dahi saklanarak kesintisiz bir deneyim sağlanır.
+- **Responsive Tasarım:** Proje, mobil uyumlu olacak şekilde tasarlanmış ve Flexbox ile esnek yapılar kullanılmıştır.
+- **Stil Yönetimi:** SCSS kullanılarak stiller modüler hale getirilmiş, ortak stiller merkezi bir dosyada toplanmıştır.
 
-
-
+## ⚡ Performans İyileştirmeleri
+	•	CSS ve JavaScript Minifikasyonu: Üretim için dosyalar sıkıştırılmış ve daha hızlı yüklenmesi sağlanmıştır.
+	•	Manual Chunks: node_modules dışındaki bağımlılıklar manuel olarak bölünerek, sayfa yükleme hızları iyileştirilmiştir.

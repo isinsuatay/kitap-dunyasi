@@ -1,15 +1,16 @@
 @use "@/styles/variables.scss" as *;
 @use "sass:color";
 .footer {
-  background: linear-gradient(to right, $primary-color, #6a11cb);
-  color: $white;
   padding: 2.5em 0;
   text-align: center;
   position: relative;
   overflow: hidden;
+  
+
 
   // Footer container
   .footer-container {
+    box-shadow: 5px 5px 5px 5px  rgba(28, 27, 27, 0.3);
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -18,18 +19,21 @@
     padding: 1em;
     gap: 20px;
     transition: all 0.3s ease;
+    // color: $header-dark;
+
 
     .footer-logo {
       flex: 1;
       max-width: 250px;
       text-align: left;
       transition: transform 0.3s ease;
+      
 
       a {
+        // color: $header-dark;
         font-size: 1.5rem;
         font-weight: bold;
         text-decoration: none;
-        color: $white;
         display: flex;
         align-items: center;
         gap: 0.5em;
@@ -58,10 +62,11 @@
       h3 {
         font-size: 1.2rem;
         margin-bottom: 10px;
-        border-bottom: 2px solid $white;
+        border-bottom: 2px solid $header-dark;
         display: inline-block;
         padding-bottom: 5px;
         transition: color 0.3s ease;
+        
       }
 
       ul {
@@ -72,8 +77,8 @@
           margin: 8px 0;
 
           a {
+            // color: $header-dark;
             text-decoration: none;
-            color: $white;
             font-size: 1rem;
             transition: color 0.3s ease-in-out;
 
@@ -107,7 +112,7 @@
         margin-top: 10px;
 
         a {
-          color: $white;
+          // color: $white;
           font-size: 1.5rem;
           transition: color 0.3s ease-in-out;
 
@@ -125,7 +130,7 @@
     margin-top: 20px;
     font-size: 0.9rem;
     padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-top: 1px solid rgba(46, 44, 44, 0.3);
     text-align: center;
   }
 

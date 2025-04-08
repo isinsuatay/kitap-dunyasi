@@ -1,19 +1,19 @@
 <template>
   <div class="review-section">
-    <h3 class="review-title">Değerlendirmeler</h3>
-
+    <h3 class="review-title">Değerlendirmeler ({{ reviews.length }})</h3>
     <div v-if="reviews.length" class="reviews-list">
   <div v-for="review in reviews" :key="review.id" class="review-item">
     <div class="review-header">
       <span class="review-user">{{ review.username || 'Bilinmeyen Kullanıcı' }}</span>
       <span class="review-date">{{ formatDate(review.createdAt) }}</span>
+      
     </div>
 
     <!-- Yorumun yanında yıldızlı puan göster -->
     <div class="review-rating">
-      <strong>Puan:</strong> 
-      <span v-for="i in review.rating" :key="i" class="star">★</span>
-    </div>
+  <strong>Puan:</strong> 
+  <span v-for="i in 5" :key="i" class="star" :class="{ filled: i <= review.rating }">★</span>
+</div>
 
     <!-- Düzenleme kısmı -->
     <div v-if="editingReview === review.id">
@@ -45,7 +45,7 @@
           <option v-for="i in 5" :key="i" :value="i">{{ i }} Yıldız</option>
         </select>
       </div>
-      <button @click="submitReview" class="submit-btn" :disabled="!newReview.text.trim()">Değerlendir</button>
+      <button @click="submitReview" class="submit-btn":disabled="!newReview.text.trim() || !newReview.rating">Değerlendir</button>
     </div>
   </div>
 </template>
@@ -60,19 +60,23 @@ const store = useStore();
 const router = useRouter();
 
 const props = defineProps({
-  bookId: String,
+  bookId: {
+    type: [String, Number],
+    required: true,
+  },
 });
+const reviews = computed(() => store.getters["reviews/getReviewsByBook"](String(props.bookId)));
 
-const reviews = computed(() => store.getters["reviews/getReviewsByBook"](props.bookId));
-
+// Yorum alanı
 const newReview = ref({
   text: '',
   rating: 5,
 });
 
-// Kullanıcı Bilgisi
-const user = computed(() => store.state.user?.user || null);
-const userId = computed(() => user.value?.id || user.value?.email || null);
+// Giriş yapan kullanıcı bilgisi
+const user = computed(() => store.getters["user/user"]);
+const userId = computed(() => user.value?.id || null);
+const username = computed(() => user.value?.username || `${user.value?.firstName || ''} ${user.value?.lastName || ''}`.trim());
 
 const submitReview = () => {
   if (!user.value) {
@@ -91,34 +95,34 @@ const submitReview = () => {
     return;
   }
 
-  store.commit('reviews/ADD_REVIEW', { 
-    bookId: props.bookId, 
+  store.commit('reviews/ADD_REVIEW', {
+    bookId: props.bookId,
     text: newReview.value.text,
-    userId: userId.value, 
-    username: user.value.username || `${user.value.firstName} ${user.value.lastName}`, 
-    rating: newReview.value.rating
+    userId: userId.value,
+    username: username.value,
+    rating: newReview.value.rating,
   });
 
   newReview.value.text = '';
   newReview.value.rating = 5;
 };
+
 const deleteReview = (reviewId) => {
-  const user = store.state.user.user;
-  if (!user) {
+  if (!user.value) {
     Swal.fire("Hata!", "Yorum silmek için giriş yapmalısınız.", "error");
     return;
   }
 
-  const bookId = props.bookId;
-
-  store.commit("reviews/DELETE_REVIEW", { bookId, reviewId, userId: user.id });
-
-  reviews.value = [...store.getters["reviews/getReviewsByBook"](bookId)];
+  store.commit("reviews/DELETE_REVIEW", {
+    bookId: props.bookId,
+    reviewId,
+    userId: userId.value,
+  });
 
   Swal.fire("Başarılı!", "Yorum silindi.", "success");
 };
 
-// Yorum Düzenleme
+// Yorum düzenleme
 const editingReview = ref(null);
 const updatedReviewText = ref('');
 const updatedReviewRating = ref(5);
@@ -130,14 +134,14 @@ const startEditing = (review) => {
 };
 
 const saveEdit = (review) => {
-  store.commit('reviews/UPDATE_REVIEW', { 
-    bookId: props.bookId, 
-    reviewId: review.id, 
-    updatedText: updatedReviewText.value, 
-    updatedRating: updatedReviewRating.value
+  store.commit('reviews/UPDATE_REVIEW', {
+    bookId: props.bookId,
+    reviewId: review.id,
+    updatedText: updatedReviewText.value,
+    updatedRating: updatedReviewRating.value,
   });
 
-  editingReview.value = null; 
+  editingReview.value = null;
 };
 
 const formatDate = (dateString) => {

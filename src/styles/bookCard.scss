@@ -7,7 +7,7 @@
   background: $white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 10px $shadow-light;
+  box-shadow: 0 4px 10px $box-shadow-light;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   cursor: pointer;
   text-align: center;
@@ -15,7 +15,7 @@
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px $shadow-dark;
+    box-shadow: 0 8px 20px $box-shadow-dark;
   }
 
   .favorite-btn {
@@ -23,7 +23,7 @@
     top: 12px;
     right: 12px;
     padding: 8px 12px;
-    color: white;
+    color: $white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -102,7 +102,7 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   .book-card {
     width: 100%;
     max-width: 250px;

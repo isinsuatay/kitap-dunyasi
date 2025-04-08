@@ -13,7 +13,7 @@
   background-color: $white;
   padding: 30px;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px $box-shadow-light;
   width: 100%;
   max-width: 800px;
   transition: all 0.3s ease-in-out;
@@ -139,4 +139,14 @@
     padding: 10px;
     font-size: 0.9rem;
   }
+}
+
+.quill-editor {
+  min-height: 200px;
+  max-height: 400px;
+  height: 300px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
 }

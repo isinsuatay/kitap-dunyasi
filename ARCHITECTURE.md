@@ -43,10 +43,8 @@ src/
 - Axios kullanılarak API çağrıları yapılmaktadır.
 - Döviz kurları, her 30 dakikada bir güncellenerek Vuex state içinde saklanmaktadır.
 
-### 5. **Vue 3 Teleport Kullanımı**
-- Modallar ve uyarılar için **Teleport** özelliği kullanılmıştır.
 
-### 6. **Performans Optimizasyonları**
+### 5. **Performans Optimizasyonları**
 - **Lazy loading** ile bileşen yüklemeleri optimize edilmiştir.
 - **Debounce mekanizması** anlık arama gibi işlemlerde kullanılmıştır.
 - **Vue 3 reactivity system** sayesinde gereksiz render işlemleri minimize edilmiştir.

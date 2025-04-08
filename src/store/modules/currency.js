@@ -1,4 +1,3 @@
-// store/modules/currency.js
 import { fetchExchangeRates, getStoredExchangeRates } from "@/services/exchangeService";
 
 export default {

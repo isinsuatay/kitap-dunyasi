@@ -1,37 +1,37 @@
-//  Renk Değişkenleri
 $primary-color: #007bff;
-$secondary-color: #6c757d;
+$secondary-color: rgb(70, 130, 180);
 $background-light: #f8f9fa;
 $background-dark: #121212;
 $text-color-light: #212529;
 $text-color-dark: #e0e0e0;
 $header-dark: #1f1f1f;
 $gray-dark: #343a40;
-$gold: #f39c12;
-$golden-yellow:#f1c40f;
-$white: #ffffff;
-$shadow-light: rgba(0, 0, 0, 0.1);
-$shadow-dark: rgba(0, 0, 0, 0.2);
-$secondary-color: #6610f2;
 $gray: #6c757d;
-$light-gray:#ddd;
+$light-gray: #ddd;
+$white: #ffffff;
+$gold: #f39c12;
+$golden-yellow: #f1c40f;
 $danger: #dc3545;
 $danger-dark: #a71d2a;
-$fresh-green:#4CAF50;
-
-$steel-blue:#34495e;
-// Yazı Tipi ve Boyutu
+$fresh-green: #4CAF50;
+$steel-blue: #34495e;
 
 $font-family: 'Poppins', sans-serif;
 $font-size-base: 16px;
 
-// Ekstra Renkler ve Form Stili
-
-$text-color: #333; 
-
+$text-color: #333;
 $form-bg: #f9f9f9;
 $primary-hover: #0056b3;
-$green-hover:#45a049;
+$green-hover: #45a049;
 $error-color: #ff4d4d;
 $border-radius: 8px;
 $transition-speed: 0.3s;
+
+
+$navbar-bg-light: linear-gradient(to right, $primary-color, #6a11cb);  
+$footer-bg-light: linear-gradient(to right, $primary-color, #6a11cb);  
+$navbar-bg-dark: #333; $footer-bg-dark: #333; 
+
+// Box-shadow renkleri
+$box-shadow-light: rgba(0, 0, 0, 0.1); 
+$box-shadow-dark: rgba(0, 0, 0, 0.2);

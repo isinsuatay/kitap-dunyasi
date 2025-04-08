@@ -1,6 +1,10 @@
-@use 'theme';
-@use "@/styles/variables.scss" as *;
-@use "sass:color";
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 // Genel sayfa yapısı
 body {
@@ -10,7 +14,8 @@ body {
   color: var(--primary-text-color);
   margin: 0;
   padding: 0;
-  transition: background-color $transition-speed ease-in-out, color $transition-speed ease-in-out;
+  transition: background-color $transition-speed ease-in-out,
+    color $transition-speed ease-in-out;
 }
 
 // Ana Konteyner
@@ -21,7 +26,12 @@ body {
 }
 
 // Başlık Stilleri
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: bold;
   margin-bottom: 10px;
 }
@@ -40,6 +50,25 @@ h2 {
 
 h3 {
   font-size: 1.5rem;
+}
+
+// Butonlar
+button {
+  background: $secondary-color;
+  color: $white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+
+  &:hover {
+    color: color.adjust($text-color, $lightness: 15%);
+    transform: scale(1.05);
+  }
+  &:hover {
+    background: $danger-dark;
+  }
 }
 
 // Fade In Animasyonu

@@ -35,8 +35,3 @@ const toggleTheme = () => {
 };
 </script>
 
-<style scoped>
-.theme-transition {
-  transition: background-color 0.3s, color 0.3s;
-}
-</style>

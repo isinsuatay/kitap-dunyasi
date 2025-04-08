@@ -11,10 +11,11 @@
   .sidebar {
     flex: 1;
     max-width: 300px;
-    background-color:#f0f0f0;
+    background-color: rgba(255,255,255,1);
+    color: $background-dark;
     padding: 20px;
-    border-radius:$border-radius;
-    box-shadow: 0 4px 8px $shadow-light;
+    border-radius: vars.$border-radius;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
     transition: transform 0.3s ease-in-out;
 
     &:hover {
@@ -24,7 +25,7 @@
     h3 {
       font-size: 1.5rem;
       margin-bottom: 15px;
-      color:$primary-color;
+      color: $background-dark;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -35,36 +36,41 @@
         font-weight: 900;
       }
     }
-    
+
     .filters {
       display: flex;
       flex-direction: column;
       gap: 15px;
-      
+
       .filter-item {
         display: flex;
         flex-direction: column;
 
         label {
           font-size: 1rem;
+          margin-top: 5px;
+
         }
         
         select,
         input {
           margin-top: 5px;
-          padding: 8px;
+          padding: 10px;
           font-size: 1rem;
           border-radius: vars.$border-radius;
+          border: 1px solid $light-gray; 
+          outline: none; 
+          box-sizing: border-box;
+          width: 100%;
           transition: all vars.$transition-speed ease;
-          border: 1px solid rgb(240, 237, 237) ;    
-          
+        
           &:focus {
-            border-color:$primary-color;      
-            box-shadow: 0 0 5px $primary-color;  
+            border-color: $primary-color;
+            box-shadow: 0 0 5px $primary-color;
           }
         }
       }
-      
+
       .view-toggle {
         display: flex;
         gap: 10px;
@@ -78,9 +84,9 @@
           cursor: pointer;
           transition: transform 0.2s ease, color 0.2s ease;
           padding: 10px;
-          border-radius: 50%;
+          border-radius: vars.$border-radius;
           
-          color: orange;  
+          color: $secondary-color;
 
           &:hover {
             transform: scale(1.1);
@@ -88,30 +94,54 @@
       
           &.active {
             transform: scale(1.2);
-            color:brown
+            color: brown;
           }
         }
       }
+
       .clear-filters {
-        background-color:$secondary-color;
+        background-color: $danger;
         color: $white;
         padding: 10px;
+        margin:20px 10px 10px 0;
         border: none;
         border-radius: vars.$border-radius;
         cursor: pointer;
         display: flex;
         align-items: center;
+        justify-self: center;
         gap: 8px;
-        transition: background-color vars.$transition-speed ease;
-        
+
         &:hover {
-          background-color:$primary-hover;
+          background-color: $danger-dark;
         }
-        
+
         &::before {
           content: "\f12d";
           font-family: "Font Awesome 5 Free";
           font-weight: 900;
+        }
+      }
+
+      .filter-toggle {
+        background-color: transparent;
+        font-size: 1.25rem;
+        border: none;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        color: $background-dark;
+
+      }
+
+      .filter-content {
+        transition: max-height 0.5s ease-in-out, padding 0.3s ease;
+        overflow: hidden;
+        max-height: 0;
+        padding: 0;
+
+        &.visible {
+          max-height: 1000px;
+          padding: 15px 0;
         }
       }
     }
@@ -123,7 +153,7 @@
     
     .book-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 20px;
       transition: transform vars.$transition-speed ease;
       
@@ -132,7 +162,7 @@
         flex-direction: column;
       }
     }
-    
+
     .no-books {
       font-size: 1.5rem;
       color: $text-color-light;
@@ -154,7 +184,7 @@
       padding: 15px;
     }
   }
-  
+
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: center;
@@ -171,7 +201,7 @@
       gap: 10px;
     }
   }
-  
+
   @media (max-width: 480px) {
     .book-list {
       grid-template-columns: 1fr !important;
@@ -183,3 +213,4 @@
     }
   }
 }
+

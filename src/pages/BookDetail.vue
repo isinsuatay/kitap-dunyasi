@@ -11,7 +11,8 @@
         <p class="isbn">📎 ISBN: <strong>{{ book.isbn }}</strong></p>
         <p class="page-count">📑 Sayfa Sayısı: <strong>{{ book.pageCount }}</strong></p>
         <p class="publish-date">🗓️ Basım Tarihi: <strong>{{ book.publicationDate }}</strong></p>
-        <p class="description">{{ book.description }}</p>
+        <p class="description">📝 Açıklama: <strong>{{ book.description }}</strong></p>
+        <p class="price">💰 Fiyat: <strong>{{ book.price }} {{ book.currency }}</strong></p>
         <button @click="toggleFavorite" class="book-favorite-btn">
           {{ isFavorite ? "❤️ Favorilerden Çıkar" : "⭐ Favorilere Ekle" }}
         </button>

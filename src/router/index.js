@@ -1,51 +1,45 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomePage from '@/pages/HomePage.vue';
-import BookDetail from '@/pages/BookDetail.vue';
-import FavoritesPage from '@/pages/FavoritesPage.vue';
-import ProfilePage from '@/pages/ProfilePage.vue';
-import AuthPage from '@/pages/AuthPage.vue';
 import store from '@/store';
-import AddBook from '@/pages/AddBook.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: HomePage,
+    component: () => import('@/pages/HomePage.vue'),
   },
   {
     path: '/book/:id',
     name: 'BookDetail',
-    component: BookDetail,
+    component: () => import('@/pages/BookDetail.vue'),
     props: true,
   },
   {
     path: '/addbook',
     name: 'AddBook',
-    component: AddBook,
-    meta: { requiresAuth: true }, 
+    component: () => import('@/pages/AddBook.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/favorites',
     name: 'Favorites',
-    component: FavoritesPage,
-    meta: { requiresAuth: true }, 
+    component: () => import('@/pages/FavoritesPage.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/profile',
     name: 'Profile',
-    component: ProfilePage,
+    component: () => import('@/pages/ProfilePage.vue'),
     meta: { requiresAuth: true },
   },
   {
     path: '/auth',
     name: 'Auth',
-    component: AuthPage,
+    component: () => import('@/pages/AuthPage.vue'),
     beforeEnter: (to, from, next) => {
-      if (store.getters.isAuthenticated) {
-        next('/profile'); 
+      if (store.getters['user/isAuthenticated']) {
+        next('/profile');
       } else {
-        next(); 
+        next();
       }
     },
   },
@@ -55,19 +49,17 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
-    // Eğer önceki konum kaydedilmişse, oraya dön
     if (savedPosition) {
       return savedPosition;
     }
-    // Sayfa geçişlerinde her zaman en üstte başla
     return { top: 0, left: 0, behavior: 'smooth' };
   },
 });
 
-// Sayfalara giriş kontrolü ekleme
+// Global auth guard
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
-    next('/auth'); // Eğer yetki gerektiren bir sayfaya gidiliyorsa ve giriş yapılmadıysa auth sayfasına yönlendir
+  if (to.meta.requiresAuth && !store.getters['user/isAuthenticated']) {
+    next('/auth');
   } else {
     next();
   }

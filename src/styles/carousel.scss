@@ -4,26 +4,28 @@
 .carousel {
   position: relative;
   width: 100%;
-  max-width: 800px;
+  max-width: 960px;
   margin: 3rem auto;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 20px;
   background-color: $background-light;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .carousel-title {
-  font-size: 28px;
+  font-size: 2.25rem;
   font-weight: 700;
-  color: $gold;
+  color: $danger-dark;
   text-align: center;
-  margin-bottom: 20px;
-  font-family: 'Poppins', sans-serif;
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 8px $box-shadow-dark;
 }
 
 .carousel-inner {
   display: flex;
-  white-space: nowrap;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .carousel-item {
@@ -31,27 +33,41 @@
   position: relative;
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
-  
+  transform: scale(0.96);
+  filter: blur(2px);
+  pointer-events: none;
+
   &.active {
     opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+    pointer-events: all;
+  }
+
+  &:hover .carousel-caption {
+    background: rgba(0, 0, 0, 0.85);
+  }
+
+  &:hover img {
+    transform: scale(1.03);
   }
 }
 
 img {
   width: 100%;
-  height: 300px;
-  object-fit: contain; 
-  border-radius: 12px;
-  display: block;
+  height: 340px;
+  object-fit: contain;
+  border-radius: 20px;
+  transition: transform 0.4s ease-in-out;
+  background-color: #f4f4f4; 
+
 }
 
 .carousel-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.6) 100%);
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent 70%);
+  border-radius: 20px;
 }
 
 .carousel-caption {
@@ -59,48 +75,72 @@ img {
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.75);
   color: $white;
-  padding: 12px;
-  border-radius: 6px;
-  width: 80%;
+  padding: 1rem;
+  border-radius: 12px;
+  width: 85%;
   text-align: center;
   font-family: "Poppins", sans-serif;
+  backdrop-filter: blur(6px);
+  transition: background 0.3s ease;
 
   h3 {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 5px 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 4px;
   }
 
   p {
-    font-size: 14px;
+    font-size: 0.9rem;
     font-style: italic;
-    opacity: 0.9;
+    color: $gray-dark;
   }
 }
-
-.prev, .next {
+.prev,
+.next {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  color: $white;
-  border: none;
-  padding: 14px;
-  cursor: pointer;
-  font-size: 20px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 50%;
-  transition: background 0.3s;
+  color: $white;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
   &:hover {
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.95);
   }
 }
 
 .prev {
-  left: 10px;
+  left: 16px;
 }
 
 .next {
-  right: 10px;
+  right: 16px;
+}
+
+
+.error-message {
+  text-align: center;
+  color: $error-color;
+  font-weight: 500;
+  margin-top: 1rem;
 }

@@ -9,8 +9,8 @@ const DEFAULT_VALUES = {
   [BOOKS_KEY]: "/books.json",
   [CATEGORIES_KEY]: "/categories.json",
   [USERS_KEY]: JSON.stringify([]),
-  [FAVORITES_KEY]: {}, 
-  [REVIEWS_KEY]: {}, 
+  [FAVORITES_KEY]: {},
+  [REVIEWS_KEY]: {},
   [FILTERS_KEY]: {
     category: "",
     language: "",
@@ -34,21 +34,23 @@ async function fetchJSON(file) {
   }
 }
 
-
 //  LocalStorage başlatma
 export async function initializeLocalStorage() {
   try {
     for (const key in DEFAULT_VALUES) {
       if (!localStorage.getItem(key)) {
         let value;
-        
+
         // JSON dosyalarını fetch ile alıyoruz
-        if (typeof DEFAULT_VALUES[key] === "string" && DEFAULT_VALUES[key].endsWith(".json")) {
-          value = await fetchJSON(DEFAULT_VALUES[key]);  
+        if (
+          typeof DEFAULT_VALUES[key] === "string" &&
+          DEFAULT_VALUES[key].endsWith(".json")
+        ) {
+          value = await fetchJSON(DEFAULT_VALUES[key]);
         } else {
           value = DEFAULT_VALUES[key];
         }
-        
+
         localStorage.setItem(key, JSON.stringify(value));
       }
     }
@@ -57,7 +59,6 @@ export async function initializeLocalStorage() {
     if (!localStorage.getItem(FILTERS_KEY)) {
       saveFiltersToLocalStorage(DEFAULT_VALUES[FILTERS_KEY]);
     }
-
   } catch (error) {
     console.error("LocalStorage başlatılırken hata oluştu:", error);
   }
@@ -101,15 +102,25 @@ export function saveBooksToLocalStorage(books) {
     console.error("LocalStorage'a yazılırken hata oluştu:", error);
   }
 }
+export function addBookToLocalStorage(newBook) {
+  let books = getBooksFromLocalStorage(); 
+  books.push({
+    id: newBook.id,
+    title: newBook.title,
+    author: newBook.author,
+    isbn: newBook.isbn,
+    pageCount: newBook.pageCount,
+    publicationDate: newBook.publicationDate,
+    category: newBook.category,
+    cover: newBook.cover,
+    price: newBook.price,
+    currency: newBook.currency,
+    description: newBook.description, 
+    addedBy: newBook.addedBy, 
+    featured: false, 
+  });
 
-export function addBookToLocalStorage(book) {
-  try {
-    const books = getBooksFromLocalStorage();
-    books.push(book);
-    saveBooksToLocalStorage(books);
-  } catch (error) {
-    console.error("Kitap eklenirken hata oluştu:", error);
-  }
+  localStorage.setItem("books", JSON.stringify(books));
 }
 
 export function updateBookInLocalStorage(updatedBook) {
@@ -127,7 +138,9 @@ export function updateBookInLocalStorage(updatedBook) {
 
 export function deleteBookFromLocalStorage(bookId) {
   try {
-    const books = getBooksFromLocalStorage().filter((book) => book.id !== bookId);
+    const books = getBooksFromLocalStorage().filter(
+      (book) => book.id !== bookId
+    );
     saveBooksToLocalStorage(books);
   } catch (error) {
     console.error("Kitap silinirken hata oluştu:", error);
@@ -217,7 +230,6 @@ export function addReview(bookId, userId, review) {
       date: formattedDate,
     });
     localStorage.setItem("reviews", JSON.stringify(reviews));
-
   } catch (error) {
     console.error("Yorum eklenirken hata oluştu:", error);
   }
@@ -230,24 +242,30 @@ export function getCategoriesFromLocalStorage() {
       console.log("Kategoriler localStorage'da bulunamadı.");
       return [];
     }
-    return JSON.parse(data);  
+    return JSON.parse(data);
   } catch (error) {
     console.error("localStorage'dan kategoriler okunurken JSON hatası:", error);
-    return []; 
+    return [];
   }
 }
 
-//  **Filtrelenmiş Kitapları Getirme**
+//  Filtrelenmiş Kitapları Getirme
 export function getFilteredBooksFromLocalStorage(filters) {
   try {
     let books = getBooksFromLocalStorage();
 
     if (filters.category) {
-      books = books.filter(book => book.category?.toLowerCase() === filters.category.toLowerCase());
+      books = books.filter(
+        (book) =>
+          book.category?.toLowerCase() === filters.category.toLowerCase()
+      );
     }
 
     if (filters.language) {
-      books = books.filter(book => book.language?.toLowerCase() === filters.language.toLowerCase());
+      books = books.filter(
+        (book) =>
+          book.language?.toLowerCase() === filters.language.toLowerCase()
+      );
     }
 
     switch (filters.sortOption) {
@@ -258,7 +276,9 @@ export function getFilteredBooksFromLocalStorage(filters) {
         books.sort((a, b) => a.price - b.price);
         break;
       case "publicationDate":
-        books.sort((a, b) => new Date(b.publicationDate) - new Date(a.publicationDate));
+        books.sort(
+          (a, b) => new Date(b.publicationDate) - new Date(a.publicationDate)
+        );
         break;
     }
 
@@ -271,14 +291,19 @@ export function getFilteredBooksFromLocalStorage(filters) {
 
 // Fiyatı seçilen para birimine dönüştüren fonksiyon
 export function convertPrice(price, fromCurrency, toCurrency, rates) {
-  if (price === undefined || price === null || !rates || !rates[fromCurrency] || !rates[toCurrency]) {
+  if (
+    price === undefined ||
+    price === null ||
+    !rates ||
+    !rates[fromCurrency] ||
+    !rates[toCurrency]
+  ) {
     console.error("Geçersiz döviz kuru verisi veya fiyat.");
     return price || 0;
   }
 
-  if (fromCurrency === toCurrency) return price; 
+  if (fromCurrency === toCurrency) return price;
 
   const priceInUSD = price / rates[fromCurrency];
   return priceInUSD * rates[toCurrency];
 }
-
