@@ -40,8 +40,8 @@
 
 
       &:hover {
-        background-color: darken($gold, 10%);
-      }
+        background-color: color.adjust($gold, $lightness: -10%);
+            }
     }
     
     
